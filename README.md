@@ -1,4 +1,22 @@
 # BÀI TẬP LỚN CẤU TRÚC RỜI RẠC
+## Yêu cầu bài tập
+Xây dựng một ứng dụng thoả mãn các chức năng sau:
+- Phần cơ bản:
+    1. Vẽ đồ thị trực quan
+    2. Lưu đồ thị
+    3. Tìm đường đi ngắn nhất
+    4. Duyệt đồ thị theo các chiến lược: BFS & DFS
+    5. Kiểm tra một đồ thị có phải là đồ thị 2 phía không?
+    6. Chuyển đổi qua lại giữa các phương pháp biểu diễn đồ thị:
+    (ma trận kề <->danh sách kề <-> danh sách cạnh)
+    (Lưu ý: đồ thị có thể vô hướng & có hướng)
+- Phần nâng cao:
+    7. Trực quan hóa các thuật toán: 
+    7.1 Prim
+    7.2 Kruskal
+    7.3 Ford-Fulkerson
+    7.4 Fleury
+    7.5 Hierholzer
 ## Cấu trúc các folder và file của bài tập lớn như sau
 ``` text
 src/
