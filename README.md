@@ -15,13 +15,7 @@ Xây dựng một ứng dụng thoả mãn các chức năng sau:
         * (Lưu ý: đồ thị có thể vô hướng & có hướng)
 
 * **Phần nâng cao:**
-    7. Trực quan hóa các thuật toán:
-        * 7.1 Prim
-        * 7.2 Kruskal
-        * 7.3 Ford-Fulkerson
-        * 7.4 Fleury
-        * 7.5 Hierholzer
-
+    7. Trực quan hóa các thuật toán: (Prim, Kruskal, Hierholzer, Fleury, Ford-Fulkerson)
 ## Cấu trúc các folder và file của bài tập lớn như sau
 
 ```text
@@ -70,4 +64,5 @@ src/
 ```
 
 ## Cập nhật
-* 23/11/2025: Tạo trước UI để dễ hình dung hơn ứng dụng BTL mình sẽ làm, từ tuần sau sẽ triển khai dần dần các yêu cầu cần thiết. Nếu muốn chạy thử thì chạy file `test.py` nhé.
+* 23/11/2025: Tạo trước UI để dễ hình dung hơn ứng dụng BTL mình sẽ làm, từ tuần sau sẽ triển khai dần dần các yêu cầu cần thiết.
+* 30/11/2025: Thêm tính năng chuyển đổi giữa các kiểu đồ thị (Ma trận kề <-> Danh sách kề <-> Danh sách cạnh)
