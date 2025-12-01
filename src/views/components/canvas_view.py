@@ -1,6 +1,6 @@
 import tkinter as tk
 import math
-from src.utils.layout_math import LayoutMath 
+from utils.layout_math import LayoutMath 
 
 class CanvasView(tk.Canvas):
     def __init__(self, master, **kwargs):

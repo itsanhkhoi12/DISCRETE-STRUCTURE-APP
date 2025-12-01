@@ -6,7 +6,6 @@ class LayoutMath:
         n = len(nodes)
         if n == 0: return {}
         positions = {}
-        # Bán kính bằng 35% chiều nhỏ nhất của canvas
         radius = min(canvas_width, canvas_height) * 0.35
         center_x = canvas_width / 2
         center_y = canvas_height / 2
@@ -14,7 +13,6 @@ class LayoutMath:
         sorted_nodes = sorted(list(nodes))
         for i, node in enumerate(sorted_nodes):
             angle = 2 * math.pi * i / n
-            # Công thức lượng giác chuyển từ cực sang Descartes
             x = center_x + radius * math.cos(angle)
             y = center_y + radius * math.sin(angle)
             positions[node] = (x, y)

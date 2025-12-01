@@ -1,7 +1,7 @@
 import tkinter as tk
-from src.views.main_window import MainWindow
+from controllers.app_controller import AppController
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = MainWindow(root)
+    app = AppController(root)
     root.mainloop()

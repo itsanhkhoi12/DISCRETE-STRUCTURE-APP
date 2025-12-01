@@ -71,7 +71,7 @@ class ControlPanel(tk.Frame):
         tk.Label(frame_adv, text="Chọn thuật toán:", bg=self.bg_color).pack(anchor="w", padx=5)
         self.algo_choice = tk.StringVar()
         self.combo_algo = ttk.Combobox(frame_adv, textvariable=self.algo_choice, state="readonly")
-        self.combo_algo['values'] = ("Dijkstra", "Prim", "Kruskal", "Ford-Fulkerson", "Fleury", "Hierholzer")
+        self.combo_algo['values'] = ("Prim", "Kruskal", "Ford-Fulkerson", "Fleury", "Hierholzer")
         self.combo_algo.current(0)
         self.combo_algo.pack(fill=tk.X, padx=5, pady=5)
 
