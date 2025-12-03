@@ -1,6 +1,6 @@
 from tkinter import filedialog, messagebox
-import networkx as nx
 from utils.readfile import JsonUtils
+from models.graph import Graph
 
 class FileController:
     def __init__(self):
@@ -29,8 +29,8 @@ class FileController:
         graph_data = {
             'directed': directed,
             'weighted': weighted,
-            'nodes': list(graph.nodes()),
-            'edges': list(graph.edges(data=True))
+            'nodes': list(graph.nodes),
+            'edges': graph.get_edges(),
         }
 
         # Gọi tầng Utils để ghi file
@@ -67,14 +67,23 @@ class FileController:
             # Parse dữ liệu (Data transformation)
             directed = data['directed']
             weighted = data['weighted']
+            nodes = data['nodes']
+            edges = data['edges'] # Edges có format: [(u, v, w), ...]
             
-            if directed:
-                new_graph = nx.DiGraph()
-            else:
-                new_graph = nx.Graph()
+            # 1. KHỞI TẠO OBJECT GRAPH MỚI (SỬ DỤNG MODEL CỦA BẠN)
+            # new_graph = nx.DiGraph() / new_graph = nx.Graph() <-- XÓA CÁC DÒNG NÀY
+            
+            # Sử dụng constructor của Model: Graph(directed)
+            new_graph = Graph(directed=directed, weighted=weighted) # Giả sử Graph có tham số weighted
+            
+            # 2. KHÔI PHỤC ĐỈNH
+            for node in nodes:
+                new_graph.add_node(node)
                 
-            new_graph.add_nodes_from(data['nodes'])
-            new_graph.add_edges_from(data['edges'])
+            # 3. KHÔI PHỤC CẠNH VÀ TRỌNG SỐ (SỬ DỤNG HÀM add_edge CỦA BẠN)
+            for u, v, w in edges:
+                # w là trọng số (float)
+                new_graph.add_edge(u, v, w) 
             
             # Trả về dữ liệu đã xử lý sạch sẽ cho AppController
             return {

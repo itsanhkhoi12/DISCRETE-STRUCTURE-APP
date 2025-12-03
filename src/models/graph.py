@@ -1,5 +1,5 @@
 class Graph:
-    def __init__(self, directed=True):
+    def __init__(self, directed=True, weighted=True):
         """
         Khởi tạo Graph là một Danh sách đỉnh liền kề.
         Format: Đỉnh: {Danh sách các đỉnh liền kề với đỉnh đó}
@@ -7,6 +7,7 @@ class Graph:
         self.nodes = set()      
         self.adj_list = {}      
         self.directed = directed 
+        self.weighted = weighted
 
     def set_directed(self, is_directed):
         """Thay đổi chế độ có hướng/vô hướng và cập nhật lại cạnh"""
@@ -31,12 +32,17 @@ class Graph:
         self.add_node(u)
         self.add_node(v)
 
-        # 1. Thêm chiều thuận u -> v
-        self.adj_list[u][v] = weight
+        if weight is None or not self.weighted:
+            w_val = 1.0
+        else:
+            w_val = float(weight)
 
+        # 1. Thêm chiều thuận u -> v
+        self.adj_list[u][v] = w_val # <-- Dùng w_val
+        
         # 2. Nếu là đồ thị vô hướng, tự động thêm chiều ngược v -> u
         if not self.directed:
-            self.adj_list[v][u] = weight
+            self.adj_list[v][u] = w_val # <-- Dùng w_val
 
     def get_edges(self):
         """Trả về danh sách tất cả các cạnh [(u, v, w), ...]"""
@@ -72,3 +78,24 @@ class Graph:
                 matrix[i][j] = w
         
         return matrix, sorted_nodes
+    
+    @classmethod
+    def from_data(cls, nodes, edges, directed, weighted=True):
+        """
+        Tạo một đối tượng Graph mới từ dữ liệu đã đọc từ file.
+        Được gọi bởi FileController.
+        """
+        # 1. Khởi tạo đối tượng Graph mới với các cờ (flags) đúng
+        instance = cls(directed=directed, weighted=weighted)
+        
+        # 2. Thêm các đỉnh
+        for node in nodes:
+            instance.add_node(node)
+            
+        # 3. Thêm các cạnh (kèm trọng số)
+        # edge có format: (u, v, {'weight': w})
+        for u, v, attrs in edges:
+            weight = attrs.get('weight', 1.0)
+            instance.add_edge(u, v, weight)
+            
+        return instance
