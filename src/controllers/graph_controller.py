@@ -60,8 +60,6 @@ from algorithms.properties import check_bipartite
 def handle_traversal(graph_data, method, start_node):
     if method == 'BFS':
         path = bfs_traversal(graph_data, start_node)
-    elif method == 'DFS':
-        path = dfs_traversal(graph_data, start_node)
     else:
         path = []
     # Trả về path cho Views hiển thị
