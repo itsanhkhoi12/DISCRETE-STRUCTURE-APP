@@ -1,5 +1,5 @@
 import tkinter as tk
-from controllers.app_controller import AppController
+from src.controllers.app_controller import AppController
 
 if __name__ == "__main__":
     root = tk.Tk()
