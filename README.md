@@ -7,7 +7,7 @@ Xây dựng một ứng dụng thoả mãn các chức năng sau:
 * **Phần cơ bản:**
     1. Vẽ đồ thị trực quan
     2. Lưu đồ thị
-    3. Tìm đường đi ngắn nhất
+    3. Tìm đường đi ngắn nhất (Dijkstra)
     4. Duyệt đồ thị theo các chiến lược: BFS & DFS
     5. Kiểm tra một đồ thị có phải là đồ thị 2 phía không?
     6. Chuyển đổi qua lại giữa các phương pháp biểu diễn đồ thị:
@@ -66,3 +66,4 @@ src/
 ## Cập nhật
 * 23/11/2025: Tạo trước UI để dễ hình dung hơn ứng dụng BTL mình sẽ làm, từ tuần sau sẽ triển khai dần dần các yêu cầu cần thiết.
 * 30/11/2025: Thêm tính năng chuyển đổi giữa các kiểu đồ thị (Ma trận kề <-> Danh sách kề <-> Danh sách cạnh)
+* 02/12/2025: Thêm tính năng nhập/lưu đồ thị, kiểm tra đồ thị hai phía và duyệt theo BFS, DFS.
