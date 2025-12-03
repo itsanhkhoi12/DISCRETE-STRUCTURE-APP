@@ -82,8 +82,7 @@ class AppController:
             
             # Tạm thời gọi lại hàm vẽ và cập nhật info từ View (cần được bạn tự định nghĩa)
             # self.view.refresh_all() 
-            pass # Tùy thuộc vào cách bạn thiết kế hàm refresh của View
-
+            pass 
     def run_basic_algo(self, algo_type):
         pass
 
