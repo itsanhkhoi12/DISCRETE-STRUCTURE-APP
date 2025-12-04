@@ -76,12 +76,30 @@ class GraphController:
         """Hàm này dùng cho tính năng 'Xem Ma trận'"""
         return self.graph.get_adjacency_matrix()
 
-    def handle_traversal(graph_data, method, start_node):
+    def handle_traversal(self,method,start_node):
+        start_node = start_node.strip().upper()
+        if not start_node:
+            messagebox.showwarning("Cảnh báo", "Cần nhập đỉnh bắt đầu!")
+            return
+        
+        path = []
         if method == 'BFS':
-            path = Traversal.bfs_traversal(graph start_node)
-        else:
-            path = Traversal.dfs_traversal(graph, start_node)
-    
+            path = Traversal.bfs_traversal(self.graph, start_node)
+        elif method == 'DFS':
+            path = Traversal.dfs_traversal(self.graph, start_node)
+
+        if not path:
+            self.app.view.log(f"Không tìm thấy đường đi hoặc đỉnh bắt đầu {start_node} không tồn tại!")
+            return
+        
+        result = '->'.join(path)
+        self.app.view.log(f"Kết quả {method} từ đỉnh {start_node}: ")
+        self.app.view.log(result)
+
+        # Highlight màu đỏ đường đi của các đỉnh đã duyệt trong path
+        path_map = {node: 1 for node in path}
+        self.apply_coloring(path_map)
+
     # Kiểm tra đồ thị hai phía
     def handle_check_bipartite(self):
         if not self.graph.nodes:

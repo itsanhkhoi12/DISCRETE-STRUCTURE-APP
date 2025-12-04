@@ -73,9 +73,11 @@ class AppController:
         if algo_type == "BIPARTITE":
             self.graph_ctrl.handle_check_bipartite()
         elif algo_type == "DFS":
-            pass
+            start_node = self.view.control_panel.ent_start_node.get()
+            self.graph_ctrl.handle_traversal(algo_type,start_node)
         elif algo_type == "BFS":
-            pass
-    
+            start_node = self.view.control_panel.ent_start_node.get()
+            self.graph_ctrl.handle_traversal(algo_type,start_node)
+
     def run_advanced_algo(self):
         pass
