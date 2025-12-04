@@ -6,20 +6,21 @@ def bfs_traversal(graph_adj, start_node):
         
     visited = set()
     queue = deque([start_node])
+    visited.add(start_node)         
     traversal_path = []
 
     while queue:
         u = queue.popleft()
-        if u not in visited:
-            visited.add(u)
-            traversal_path.append(u)
-            
-            # Thêm tất cả các đỉnh kề chưa thăm vào hàng đợi
-            for v in graph_adj.get(u, []):
-                if v not in visited:
-                    queue.append(v)
+        traversal_path.append(u)
+
+        # duyệt các đỉnh kề
+        for v in graph_adj.get(u, []):
+            if v not in visited:
+                visited.add(v)
+                queue.append(v)
 
     return traversal_path
+
 
 def dfs_traversal(graph, start_node):
     visited = set()
@@ -39,9 +40,9 @@ def dfs_traversal(graph, start_node):
                         stack.append(neighbor)
         components.append(comp)
 
-    for đỉnh_còn_lại in graph:
-        if đỉnh_còn_lại not in visited:
-            stack = [đỉnh_còn_lại]
+    for node in graph:
+        if node not in visited:
+            stack = [node]
             comp = []
 
             while stack:
@@ -50,9 +51,9 @@ def dfs_traversal(graph, start_node):
                     visited.add(curr)
                     comp.append(curr)
 
-                    for node_kề in reversed(graph[curr]):
-                        if node_kề not in visited:
-                            stack.append(node_kề)
+                    for neighbor in reversed(graph[curr]):
+                        if neighbor not in visited:
+                            stack.append(neighbor)
 
             components.append(comp)
     return components
