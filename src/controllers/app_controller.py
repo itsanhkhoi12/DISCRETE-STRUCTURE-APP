@@ -83,9 +83,8 @@ class AppController:
             # (như handle_toggle_mode), có thể gọi nó thay vì cập nhật trực tiếp View
 
             # Tạm thời gọi lại hàm vẽ và cập nhật info từ View (cần được bạn tự định nghĩa)
-            # self.view.refresh_all()
-            pass  # Tùy thuộc vào cách bạn thiết kế hàm refresh của View
-
+            # self.view.refresh_all() 
+            pass 
     def run_basic_algo(self, algo_type):
         pass
 
