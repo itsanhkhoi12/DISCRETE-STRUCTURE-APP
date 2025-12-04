@@ -60,31 +60,22 @@ class AppController:
         Gọi FileController để tải dữ liệu, sau đó cập nhật GraphController và View.
         """
         load_result = self.file_ctrl.handle_load_graph()
-        
         if load_result:
-            # 1. Cập nhật trạng thái trong GraphController (Model/Logic)
             self.graph_ctrl.set_new_graph(
                 graph=load_result['graph'],
                 directed=load_result['directed'],
                 weighted=load_result['weighted']
             )
-            
-            # 2. Cập nhật View (Giao diện người dùng)
             self.view.control_panel.var_directed.set(load_result['directed'])
-            self.view.control_panel.var_weighted.set(load_result['weighted'])
             
-            # 3. Yêu cầu View vẽ lại và cập nhật thông tin (Nếu có hàm tương tự)
-            # Giả sử View có hàm update_display()
-            # self.view.update_display()
-            
-            # Nếu bạn đang sử dụng logic update trong GraphController
-            # (như handle_toggle_mode), có thể gọi nó thay vì cập nhật trực tiếp View
-            
-            # Tạm thời gọi lại hàm vẽ và cập nhật info từ View (cần được bạn tự định nghĩa)
-            # self.view.refresh_all() 
-            pass 
     def run_basic_algo(self, algo_type):
-        pass
-
+        self.view.log(f"--- Đang thực hiện: {algo_type} ---")
+        if algo_type == "BIPARTITE":
+            self.graph_ctrl.handle_check_bipartite()
+        elif algo_type == "DFS":
+            pass
+        elif algo_type == "BFS":
+            pass
+    
     def run_advanced_algo(self):
         pass

@@ -1,5 +1,5 @@
 from tkinter import filedialog, messagebox
-from utils.readfile import JsonUtils
+from utils.file_processor import FileProcessor
 from models.graph import Graph
 
 class FileController:
@@ -34,7 +34,7 @@ class FileController:
         }
 
         # Gọi tầng Utils để ghi file
-        success, result = JsonUtils.write_json(filename, graph_data)
+        success, result = FileProcessor.write_json(filename, graph_data)
         
         if success:
             messagebox.showinfo("Thành công", "Đã lưu đồ thị!")
@@ -57,7 +57,7 @@ class FileController:
             return None # Người dùng nhấn Cancel
 
         # Gọi tầng Utils để đọc file
-        success, data = JsonUtils.read_json(filename)
+        success, data = FileProcessor.read_json(filename)
         
         if not success:
             messagebox.showerror("Lỗi", f"Không thể đọc file: {data}")
@@ -70,17 +70,15 @@ class FileController:
             nodes = data['nodes']
             edges = data['edges'] # Edges có format: [(u, v, w), ...]
             
-            # 1. KHỞI TẠO OBJECT GRAPH MỚI (SỬ DỤNG MODEL CỦA BẠN)
-            # new_graph = nx.DiGraph() / new_graph = nx.Graph() <-- XÓA CÁC DÒNG NÀY
+            # 1. Khởi tạo một object Graph mới
             
-            # Sử dụng constructor của Model: Graph(directed)
-            new_graph = Graph(directed=directed, weighted=weighted) # Giả sử Graph có tham số weighted
+            new_graph = Graph(directed=directed, weighted=weighted)
             
             # 2. KHÔI PHỤC ĐỈNH
             for node in nodes:
                 new_graph.add_node(node)
                 
-            # 3. KHÔI PHỤC CẠNH VÀ TRỌNG SỐ (SỬ DỤNG HÀM add_edge CỦA BẠN)
+            # 3. KHÔI PHỤC CẠNH VÀ TRỌNG SỐ 
             for u, v, w in edges:
                 # w là trọng số (float)
                 new_graph.add_edge(u, v, w) 
