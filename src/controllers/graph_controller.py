@@ -75,13 +75,14 @@ class GraphController:
         return self.graph.get_adjacency_matrix()
 
 from algorithms.traversal import bfs_traversal
+from algorithms.traversal import dfs_traversal
 from algorithms.properties import check_bipartite
 
 def handle_traversal(graph_data, method, start_node):
     if method == 'BFS':
         path = bfs_traversal(graph_data, start_node)
     else:
-        path = []
+        path = dfs_traversal(graph_data, start_node)
     # Trả về path cho Views hiển thị
 
 def handle_bipartite_check(graph_data):
