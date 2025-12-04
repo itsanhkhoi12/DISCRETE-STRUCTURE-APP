@@ -1,46 +1,43 @@
-
-from typing import List, Tuple
+# src/algorithms/mst.py
+# Thuật toán Prim & Kruskal
 import heapq
-# Thuật toán Prim
+from typing import List, Tuple, Any
 
 
-def prim(graph) -> Tuple[List[Tuple[str, str, float]], float]:
+def run_prim(graph) -> List[Tuple[Any, Any, float]]:
+    # Thuật toán Prim – tìm MST cho đồ thị vô hưóng
     if not graph.nodes:
-        return [], 0.0
+        return []
 
-    start_vertex = min(iter(graph.nodes))
-
+    # Chọn đỉnh bắt đầu (lấy đỉnh đầu tiên trong set)
+    start_node = next(iter(graph.nodes))
     visited = set()
-    parent = {v: None for v in graph.nodes}
-    key = {v: float('inf') for v in graph.nodes}
-    key[start_vertex] = 0.0
-
-    pq = [(0.0, start_vertex)]
+    min_heap = []
     mst_edges = []
-    total_weight = 0.0
-    while pq:
-        current_weight, u = heapq.heappop(pq)
-        if u in visited:
+    # Bắt đầu từ đỉnh start_node
+    heapq.heappush(min_heap, (0, start_node, None))
+    while min_heap:
+        weight, current, parent = heapq.heappop(min_heap)
+        if current in visited:
             continue
-        visited.add(u)
-        if parent[u] is not None:
-            mst_edges.append((parent[u], u, current_weight))
-            total_weight += current_weight
-        for v, weight in graph.adj_list[u].items():
-            if v not in visited and weight < key[v]:
-                key[v] = weight
-                parent[v] = u
-                heapq.heappush(pq, (weight, v))
-    return mst_edges, total_weight
-# Thuật toán kruskal
+        visited.add(current)
+        # Nếu không phải đỉnh gốc → thêm cạnh vào MST
+        if parent is not None:
+            mst_edges.append((parent, current, weight))
+        # Duyệt tất cả đỉnh kề từ adj_list[current]
+        for neighbor, edge_weight in graph.adj_list[current].items():
+            if neighbor not in visited:
+                heapq.heappush(min_heap, (edge_weight, neighbor, current))
+    return mst_edges
 
 
-def kruskal(graph) -> Tuple[List[Tuple[str, str, float]], float]:
+def run_kruskal(graph) -> List[Tuple[Any, Any, float]]:
     if not graph.nodes:
-        return [], 0.0
-    edges = sorted(graph.get_edges(), key=lambda x: x[2])
-    parent = {v: v for v in graph.nodes}
-    rank = {v: 0 for v in graph.nodes}
+        return []
+    # Lấy danh sách cạnh và sắp xếp theo trọng số tăng dần
+    edges = sorted(graph.get_edges(), key=lambda e: e[2])
+    parent = {node: node for node in graph.nodes}
+    rank = {node: 0 for node in graph.nodes}
 
     def find(x):
         if parent[x] != x:
@@ -60,30 +57,9 @@ def kruskal(graph) -> Tuple[List[Tuple[str, str, float]], float]:
             rank[px] += 1
         return True
     mst_edges = []
-    total_weight = 0.0
     for u, v, w in edges:
         if union(u, v):
             mst_edges.append((u, v, w))
-            total_weight += w
             if len(mst_edges) == len(graph.nodes) - 1:
                 break
-    return mst_edges, total_weight
-# Hàm gọi từ giao diện
-
-
-def run_prim(graph):
-    edges, weight = prim(graph)
-    print("Kết quả Prim")
-    for u, v, w in edges:
-        print(f"  {u} — {v} : {w} km")
-    print(f"  Tổng trọng số: {weight:.2f} km\n")
-    return [(u, v, w) for u, v, w in edges]
-
-
-def run_kruskal(graph):
-    edges, weight = kruskal(graph)
-    print("Kết quả Kruskal")
-    for u, v, w in edges:
-        print(f"  {u} — {v} : {w} km")
-    print(f"  Tổng trọng số: {weight:.2f} km\n")
-    return [(u, v, w) for u, v, w in edges]
+    return mst_edges

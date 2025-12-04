@@ -14,7 +14,7 @@ class CanvasView(tk.Canvas):
         self.COLOR_TEXT = "white"
         self.COLOR_EDGE = "#2c3e50"
 
-    def draw_graph(self, nodes, edges, is_directed):
+    def draw_graph(self, nodes, edges, is_directed, is_weighted):
         """
         Hàm chính để vẽ đồ thị.
         - nodes: Set hoặc list các đỉnh
@@ -36,13 +36,13 @@ class CanvasView(tk.Canvas):
         # 2. Vẽ Cạnh (Edges)
         for u, v, weight in edges:
             if u in self.node_positions and v in self.node_positions:
-                self._draw_single_edge(u, v, weight, is_directed)
+                self._draw_single_edge(u, v, weight, is_directed, is_weighted)
 
         # 3. Vẽ Đỉnh (Nodes)
         for node, (x, y) in self.node_positions.items():
             self._draw_single_node(node, x, y)
 
-    def _draw_single_edge(self, u, v, weight, is_directed):
+    def _draw_single_edge(self, u, v, weight, is_directed, is_weighted):
         x1, y1 = self.node_positions[u]
         x2, y2 = self.node_positions[v]
 
@@ -65,13 +65,21 @@ class CanvasView(tk.Canvas):
                          fill=self.COLOR_EDGE, width=2,
                          arrow=arrow_opt, arrowshape=(10, 12, 5))
 
-        # Vẽ trọng số
-        mid_x = (start_x + end_x) / 2
-        mid_y = (start_y + end_y) / 2
-        self.create_rectangle(mid_x-10, mid_y-10, mid_x+10,
-                              mid_y+10, fill="white", outline="")
-        self.create_text(mid_x, mid_y, text=str(int(weight) if weight % 1 == 0 else weight),
-                         fill="red", font=("Arial", 9, "bold"))
+        # vẽ trọng số weight
+        if is_weighted:
+            mid_x = (start_x + end_x) / 2
+            mid_y = (start_y + end_y) / 2
+
+            # Khung nền trắng cho trọng số để dễ đọc
+            self.create_rectangle(mid_x-10, mid_y-10, mid_x+10, mid_y+10,
+                                  fill="white", outline="")
+
+            # Vẽ văn bản trọng số
+            # Đảm bảo hiển thị là số nguyên nếu trọng số là X.0
+            weight_text = str(int(weight) if weight % 1 == 0 else weight)
+
+            self.create_text(mid_x, mid_y, text=weight_text,
+                             fill="red", font=("Arial", 9, "bold"))
 
     def _draw_single_node(self, label, x, y):
         r = 20
@@ -80,35 +88,68 @@ class CanvasView(tk.Canvas):
         self.create_text(x, y, text=str(label),
                          fill=self.COLOR_TEXT, font=("Arial", 12, "bold"))
 
-    def highlight_edges(self, edges, color="#32CD32"):
-        # Tô màu cho cây khung Prim và Kruskal
-        self.delete("mst_highlight")
-        for u, v, weight in edges:
+    def highlight_mst(self, edges, color="#00FF00"):
+        """Tô màu cây khung nhỏ nhất – dùng cho Prim & Kruskal"""
+        self.delete("mst_highlight")  # Xóa cây cũ
+
+        for u, v, _ in edges:
             if u in self.node_positions and v in self.node_positions:
-                x1, y1, = self.node_positions[u]
+                x1, y1 = self.node_positions[u]
                 x2, y2 = self.node_positions[v]
 
-                dx, dy = x2 - x1, y2 - y1
-                dist = math.sqrt(dx*dx + dy*dy)
+                dx = x2 - x1
+                dy = y2 - y1
+                dist = (dx**2 + dy**2)**0.5
                 if dist == 0:
                     continue
-                r = 20  # bán kính đỉnh
-                start_x = x1 + (dx/dist)*r
-                start_y = y1 + (dy/dist)*r
-                end_x = x2 - (dx/dist)*r
-                end_y = y2 - (dy/dist)*r
-                # Vẽ đường tô màu đậm hơn, rộng hơn
-                line = self.create_line(start_x, start_y, end_x, end_y,
-                                        fill=color, width=6,
+
+                r = 20
+                sx = x1 + (dx/dist) * r
+                sy = y1 + (dy/dist) * r
+                ex = x2 - (dx/dist) * r
+                ey = y2 - (dy/dist) * r
+
+                line = self.create_line(sx, sy, ex, ey,
+                                        fill=color, width=8,
                                         tags="mst_highlight")
+                self.tag_raise(line)  # Đưa lên trên cùng
 
-                # Đưa lên trên cùng để nổi bật
-                self.tag_raise(line)
+    def highlight_edges(self, edges, color="#00FF00"):
+        """
+        Tô màu các cạnh của cây khung nhỏ nhất (Prim/Kruskal)
+        edges: danh sách [(u, v, w), ...]
+        color: màu xanh lá đẹp
+        """
+        # Xóa các đường tô cũ trước
+        self.delete("mst_highlight")
 
-                # Optional: tô lại trọng số màu trắng để nổi trên đường xanh
-                mid_x = (start_x + end_x) / 2
-                mid_y = (start_y + end_y) / 2
-                self.create_rectangle(mid_x-12, mid_y-12, mid_x+12, mid_y+12,
-                                      fill="white", outline="")
-                self.create_text(mid_x, mid_y, text=str(int(weight) if weight % 1 == 0 else weight),
-                                 fill="red", font=("Arial", 10, "bold"))
+        for u, v, w in edges:
+            if u not in self.node_positions or v not in self.node_positions:
+                continue
+
+            x1, y1 = self.node_positions[u]
+            x2, y2 = self.node_positions[v]
+
+            # Tính điểm đầu/cuối để không đè lên node
+            dx = x2 - x1
+            dy = y2 - y1
+            dist = math.sqrt(dx**2 + dy**2)
+            if dist == 0:
+                continue
+
+            r = 22  # bán kính node + margin
+            start_x = x1 + (dx / dist) * r
+            start_y = y1 + (dy / dist) * r
+            end_x = x2 - (dx / dist) * r
+            end_y = y2 - (dy / dist) * r
+
+            # Vẽ đường xanh lá ĐẬM, ĐẸP, NỔI BẬT
+            line = self.create_line(
+                start_x, start_y, end_x, end_y,
+                fill=color,
+                width=9,               # Đậm để thấy rõ
+                capstyle=tk.ROUND,
+                tags="mst_highlight"
+            )
+            # Đưa lên trên cùng
+            self.tag_raise(line)
