@@ -77,7 +77,10 @@ class CanvasView(tk.Canvas):
             self.create_text(mid_x, mid_y, text=weight_text, 
                              fill="red", font=("Arial", 9, "bold"))
 
-    def _draw_single_node(self, label, x, y):
+    def _draw_single_node(self, label, x, y, color=None):
         r = 20
-        self.create_oval(x-r, y-r, x+r, y+r, fill=self.COLOR_NODE, outline="white", width=2)
+        # Nếu không truyền màu thì lấy màu mặc định
+        fill_color = color if color else self.COLOR_NODE
+        
+        self.create_oval(x-r, y-r, x+r, y+r, fill=fill_color, outline="white", width=2)
         self.create_text(x, y, text=str(label), fill=self.COLOR_TEXT, font=("Arial", 12, "bold"))

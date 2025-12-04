@@ -1,10 +1,15 @@
 import sys
 import os
+from algorithms.traversal import Traversal
+from algorithms.properties import Bipartite
+from models.graph import Graph
+from tkinter import messagebox
+
 current_dir = os.path.dirname(os.path.abspath(__file__)) 
 parent_dir = os.path.dirname(current_dir) 
 sys.path.append(parent_dir)
 
-from models.graph import Graph
+
 
 class GraphController:
     def __init__(self, app_controller):
@@ -49,14 +54,11 @@ class GraphController:
         """
         # Cập nhật đối tượng đồ thị
         self.graph = graph
-        
         # Cập nhật các trạng thái điều khiển
         self.directed = directed
         self.weighted = weighted
-        
-        # Bắt buộc phải đồng bộ lại thuộc tính directed trong Model (nếu Graph class có set_directed)
+        # Đồng bộ lại thuộc tính directed trong Model Graph
         self.graph.set_directed(directed)
-
         self.refresh_view()
 
     def refresh_view(self):
@@ -74,24 +76,48 @@ class GraphController:
         """Hàm này dùng cho tính năng 'Xem Ma trận'"""
         return self.graph.get_adjacency_matrix()
 
-from algorithms.traversal import bfs_traversal
-from algorithms.traversal import dfs_traversal
-from algorithms.properties import check_bipartite
-
-def handle_traversal(graph_data, method, start_node):
-    if method == 'BFS':
-        path = bfs_traversal(graph_data, start_node)
-    else:
-        path = dfs_traversal(graph_data, start_node)
-    # Trả về path cho Views hiển thị
-
-def handle_bipartite_check(graph_data):
-    is_bipartite, coloring_map = check_bipartite(graph_data)
+    def handle_traversal(graph_data, method, start_node):
+        if method == 'BFS':
+            path = Traversal.bfs_traversal(graph start_node)
+        else:
+            path = Traversal.dfs_traversal(graph, start_node)
     
-    # Logic chuẩn bị dữ liệu cho Views
-    if is_bipartite:
-        V1 = [node for node, color in coloring_map.items() if color == 1]
-        V2 = [node for node, color in coloring_map.items() if color == 2]
-        return {"status": True, "V1": V1, "V2": V2, "message": "Đồ thị là 2 phía."}
-    else:
-        return {"status": False, "V1": [], "V2": [], "message": "Đồ thị không phải là 2 phía."}
+    # Kiểm tra đồ thị hai phía
+    def handle_check_bipartite(self):
+        if not self.graph.nodes:
+            messagebox.showwarning("Cảnh báo", "Đồ thị trống!")
+            return
+
+        is_bipartite, color_map = Bipartite.check_bipartite(self.graph)
+
+        if is_bipartite:
+            msg = "KẾT LUẬN: Đây là đồ thị 2 phía."
+            self.app.view.log(msg)
+            messagebox.showinfo("Kết quả", msg)
+            
+            v1 = [n for n, c in color_map.items() if c == 1]
+            v2 = [n for n, c in color_map.items() if c == 2]
+            self.app.view.log(f"-> Tập 1 (Đỏ): {v1}")
+            self.app.view.log(f"-> Tập 2 (Xanh lá): {v2}")
+
+            self.apply_coloring(color_map)
+        else:
+            msg = "KẾT LUẬN: Không phải đồ thị 2 phía."
+            self.app.view.log(msg)
+            messagebox.showerror("Kết quả", msg)
+            self.refresh_view()
+
+    def apply_coloring(self, color_map):
+        visual_colors = {
+            0: "#3498db",
+            1: "#e74c3c",
+            2: "#2ecc71"
+        }
+
+        canvas = self.app.view.canvas_view
+        
+        for node, color_code in color_map.items():
+            if node in canvas.node_positions:
+                fill_color = visual_colors.get(color_code, "#3498db")
+                x, y = canvas.node_positions[node]
+                canvas._draw_single_node(node, x, y, color=fill_color)

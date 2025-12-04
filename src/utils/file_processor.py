@@ -1,6 +1,6 @@
 import json
 
-class JsonUtils:
+class FileProcessor:
     #Ghi dữ liệu dictionary vào file JSON
     @staticmethod
     def write_json(file_path, data):
