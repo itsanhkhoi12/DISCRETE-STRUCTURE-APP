@@ -1,6 +1,6 @@
 import sys
 import os
-from algorithms.traversal import bfs_traversal
+from algorithms.traversal import Traversal
 from algorithms.properties import Bipartite
 from models.graph import Graph
 from tkinter import messagebox
@@ -76,13 +76,11 @@ class GraphController:
         """Hàm này dùng cho tính năng 'Xem Ma trận'"""
         return self.graph.get_adjacency_matrix()
 
-    # Thêm thuật toán DFS, BFS ở đây nhé
     def handle_traversal(graph_data, method, start_node):
         if method == 'BFS':
-            path = bfs_traversal(graph_data, start_node)
+            path = Traversal.bfs_traversal(graph start_node)
         else:
-            path = []
-    # Trả về path cho Views hiển thị
+            path = Traversal.dfs_traversal(graph, start_node)
     
     # Kiểm tra đồ thị hai phía
     def handle_check_bipartite(self):
