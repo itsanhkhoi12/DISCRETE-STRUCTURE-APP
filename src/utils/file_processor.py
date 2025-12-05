@@ -1,7 +1,8 @@
 import json
 
-class JsonUtils:
-    #Ghi dữ liệu dictionary vào file JSON
+
+class FileProcessor:
+    # Ghi dữ liệu dictionary vào file JSON
     @staticmethod
     def write_json(file_path, data):
         try:
@@ -11,7 +12,7 @@ class JsonUtils:
         except Exception as e:
             return False, str(e)
 
-    #Đọc dữ liệu từ file JSON
+    # Đọc dữ liệu từ file JSON
     @staticmethod
     def read_json(file_path):
         try:

@@ -1,7 +1,7 @@
 from src.views.main_window import MainWindow
 from src.controllers.graph_controller import GraphController
 from src.utils.converters import GraphConverter
-from src.views.dialogs.converter_view import ConverterView
+from src.views.components.converter_view import ConverterView
 from src.controllers.file_controller import FileController
 from src.algorithms.mst import run_prim, run_kruskal
 
@@ -62,16 +62,12 @@ class AppController:
         Gọi FileController để tải dữ liệu, sau đó cập nhật GraphController và View.
         """
         load_result = self.file_ctrl.handle_load_graph()
-
         if load_result:
-            # 1. Cập nhật trạng thái trong GraphController (Model/Logic)
             self.graph_ctrl.set_new_graph(
                 graph=load_result['graph'],
                 directed=load_result['directed'],
                 weighted=load_result['weighted']
             )
-
-            # 2. Cập nhật View (Giao diện người dùng)
             self.view.control_panel.var_directed.set(load_result['directed'])
             self.view.control_panel.var_weighted.set(load_result['weighted'])
 
@@ -83,12 +79,19 @@ class AppController:
             # (như handle_toggle_mode), có thể gọi nó thay vì cập nhật trực tiếp View
 
             # Tạm thời gọi lại hàm vẽ và cập nhật info từ View (cần được bạn tự định nghĩa)
-            # self.view.refresh_all() 
-            pass 
-    def run_basic_algo(self, algo_type):
-        pass
+            # self.view.refresh_all()
+            pass
 
-    # Thêm dòng này vào đầu file AppController.py
+    def run_basic_algo(self, algo_type):
+        self.view.log(f"--- Đang thực hiện: {algo_type} ---")
+        if algo_type == "BIPARTITE":
+            self.graph_ctrl.handle_check_bipartite()
+        elif algo_type == "DFS":
+            start_node = self.view.control_panel.ent_start_node.get()
+            self.graph_ctrl.handle_traversal(algo_type, start_node)
+        elif algo_type == "BFS":
+            start_node = self.view.control_panel.ent_start_node.get()
+            self.graph_ctrl.handle_traversal(algo_type, start_node)
 
     def run_advanced_algo(self):
         algo = self.view.control_panel.combo_algo.get()

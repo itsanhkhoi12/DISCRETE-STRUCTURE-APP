@@ -81,38 +81,15 @@ class CanvasView(tk.Canvas):
             self.create_text(mid_x, mid_y, text=weight_text,
                              fill="red", font=("Arial", 9, "bold"))
 
-    def _draw_single_node(self, label, x, y):
+    def _draw_single_node(self, label, x, y, color=None):
         r = 20
-        self.create_oval(x-r, y-r, x+r, y+r,
-                         fill=self.COLOR_NODE, outline="white", width=2)
+        # Nếu không truyền màu thì lấy màu mặc định
+        fill_color = color if color else self.COLOR_NODE
+
+        self.create_oval(x-r, y-r, x+r, y+r, fill=fill_color,
+                         outline="white", width=2)
         self.create_text(x, y, text=str(label),
                          fill=self.COLOR_TEXT, font=("Arial", 12, "bold"))
-
-    def highlight_mst(self, edges, color="#00FF00"):
-        """Tô màu cây khung nhỏ nhất – dùng cho Prim & Kruskal"""
-        self.delete("mst_highlight")  # Xóa cây cũ
-
-        for u, v, _ in edges:
-            if u in self.node_positions and v in self.node_positions:
-                x1, y1 = self.node_positions[u]
-                x2, y2 = self.node_positions[v]
-
-                dx = x2 - x1
-                dy = y2 - y1
-                dist = (dx**2 + dy**2)**0.5
-                if dist == 0:
-                    continue
-
-                r = 20
-                sx = x1 + (dx/dist) * r
-                sy = y1 + (dy/dist) * r
-                ex = x2 - (dx/dist) * r
-                ey = y2 - (dy/dist) * r
-
-                line = self.create_line(sx, sy, ex, ey,
-                                        fill=color, width=8,
-                                        tags="mst_highlight")
-                self.tag_raise(line)  # Đưa lên trên cùng
 
     def highlight_edges(self, edges, color="#00FF00"):
         """

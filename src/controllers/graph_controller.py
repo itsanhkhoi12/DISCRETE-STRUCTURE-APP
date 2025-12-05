@@ -1,8 +1,10 @@
-from src.algorithms.traversal import bfs_traversal
-from src.algorithms.properties import check_bipartite
-from src.models.graph import Graph
 import sys
 import os
+from src.algorithms.traversal import Traversal
+from src.algorithms.properties import Bipartite
+from src.models.graph import Graph
+from tkinter import messagebox
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
@@ -51,14 +53,11 @@ class GraphController:
         """
         # Cập nhật đối tượng đồ thị
         self.graph = graph
-
         # Cập nhật các trạng thái điều khiển
         self.directed = directed
         self.weighted = weighted
-
-        # Bắt buộc phải đồng bộ lại thuộc tính directed trong Model (nếu Graph class có set_directed)
+        # Đồng bộ lại thuộc tính directed trong Model Graph
         self.graph.set_directed(directed)
-
         self.refresh_view()
 
     def refresh_view(self):
@@ -76,22 +75,67 @@ class GraphController:
         """Hàm này dùng cho tính năng 'Xem Ma trận'"""
         return self.graph.get_adjacency_matrix()
 
+    def handle_traversal(self, method, start_node):
+        start_node = start_node.strip().upper()
+        if not start_node:
+            messagebox.showwarning("Cảnh báo", "Cần nhập đỉnh bắt đầu!")
+            return
 
-def handle_traversal(graph_data, method, start_node):
-    if method == 'BFS':
-        path = bfs_traversal(graph_data, start_node)
-    else:
         path = []
-    # Trả về path cho Views hiển thị
+        if method == 'BFS':
+            path = Traversal.bfs_traversal(self.graph, start_node)
+        elif method == 'DFS':
+            path = Traversal.dfs_traversal(self.graph, start_node)
 
+        if not path:
+            self.app.view.log(
+                f"Không tìm thấy đường đi hoặc đỉnh bắt đầu {start_node} không tồn tại!")
+            return
 
-def handle_bipartite_check(graph_data):
-    is_bipartite, coloring_map = check_bipartite(graph_data)
+        result = '->'.join(path)
+        self.app.view.log(f"Kết quả {method} từ đỉnh {start_node}: ")
+        self.app.view.log(result)
 
-    # Logic chuẩn bị dữ liệu cho Views
-    if is_bipartite:
-        V1 = [node for node, color in coloring_map.items() if color == 1]
-        V2 = [node for node, color in coloring_map.items() if color == 2]
-        return {"status": True, "V1": V1, "V2": V2, "message": "Đồ thị là 2 phía."}
-    else:
-        return {"status": False, "V1": [], "V2": [], "message": "Đồ thị không phải là 2 phía."}
+        # Highlight màu đỏ đường đi của các đỉnh đã duyệt trong path
+        path_map = {node: 1 for node in path}
+        self.apply_coloring(path_map)
+
+    # Kiểm tra đồ thị hai phía
+    def handle_check_bipartite(self):
+        if not self.graph.nodes:
+            messagebox.showwarning("Cảnh báo", "Đồ thị trống!")
+            return
+
+        is_bipartite, color_map = Bipartite.check_bipartite(self.graph)
+
+        if is_bipartite:
+            msg = "KẾT LUẬN: Đây là đồ thị 2 phía."
+            self.app.view.log(msg)
+            messagebox.showinfo("Kết quả", msg)
+
+            v1 = [n for n, c in color_map.items() if c == 1]
+            v2 = [n for n, c in color_map.items() if c == 2]
+            self.app.view.log(f"-> Tập 1 (Đỏ): {v1}")
+            self.app.view.log(f"-> Tập 2 (Xanh lá): {v2}")
+
+            self.apply_coloring(color_map)
+        else:
+            msg = "KẾT LUẬN: Không phải đồ thị 2 phía."
+            self.app.view.log(msg)
+            messagebox.showerror("Kết quả", msg)
+            self.refresh_view()
+
+    def apply_coloring(self, color_map):
+        visual_colors = {
+            0: "#3498db",
+            1: "#e74c3c",
+            2: "#2ecc71"
+        }
+
+        canvas = self.app.view.canvas_view
+
+        for node, color_code in color_map.items():
+            if node in canvas.node_positions:
+                fill_color = visual_colors.get(color_code, "#3498db")
+                x, y = canvas.node_positions[node]
+                canvas._draw_single_node(node, x, y, color=fill_color)
