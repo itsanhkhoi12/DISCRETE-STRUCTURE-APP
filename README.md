@@ -66,3 +66,4 @@ src/
 * 30/11/2025: Thêm tính năng chuyển đổi giữa các kiểu đồ thị (Ma trận kề <-> Danh sách kề <-> Danh sách cạnh)
 * 02/12/2025: Thêm tính năng nhập/lưu đồ thị, kiểm tra đồ thị hai phía và duyệt theo BFS, DFS.
 * 03/12/2025: Sửa gọn gàng cấu trúc file của ứng dụng. Hoàn thành các tính năng cơ bản cần thiết.
+* 04/12/2025: Thêm tính năng chỉnh sửa Node, Edge của đồ thị (Xoá, cập nhật tên đỉnh, trọng số của cạnh,...)
