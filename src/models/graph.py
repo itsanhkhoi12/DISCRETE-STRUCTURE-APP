@@ -99,3 +99,65 @@ class Graph:
             instance.add_edge(u, v, weight)
             
         return instance
+
+    def remove_node(self, node):
+        """Xóa đỉnh và tất cả các cạnh liên quan"""
+        if node in self.nodes:
+            self.nodes.remove(node)
+        
+        # 1. Xóa trong adj_list (chiều đi)
+        if node in self.adj_list:
+            del self.adj_list[node]
+        
+        # 2. Xóa các cạnh chiều đến (chiều về từ đỉnh khác)
+        for u in list(self.adj_list.keys()):
+            if node in self.adj_list[u]:
+                del self.adj_list[u][node]
+
+    def remove_edge(self, u, v):
+        """Xóa cạnh u -> v"""
+        if u in self.adj_list and v in self.adj_list[u]:
+            del self.adj_list[u][v]
+        
+        # Nếu vô hướng, xóa cả v -> u
+        if not self.directed:
+            if v in self.adj_list and u in self.adj_list[v]:
+                del self.adj_list[v][u]
+
+    def update_weight(self, u, v, new_w):
+        """Cập nhật trọng số"""
+        # Logic y hệt add_edge (ghi đè)
+        self.add_edge(u, v, new_w)
+
+    def rename_node(self, old_name, new_name):
+        """
+        Đổi tên một đỉnh trong đồ thị.
+        Trả về True nếu thành công, False nếu thất bại (tên cũ không tồn tại hoặc tên mới bị trùng).
+        """
+        # 1. Kiểm tra tính hợp lệ
+        if old_name not in self.nodes:
+            return False # Đỉnh cũ không tồn tại
+        if new_name in self.nodes:
+            return False # Tên mới đã tồn tại (tránh gộp đỉnh)
+        if old_name == new_name:
+            return False
+
+        # 2. Cập nhật tập đỉnh (Nodes Set)
+        self.nodes.remove(old_name)
+        self.nodes.add(new_name)
+
+        # 3. Cập nhật Key trong Danh sách kề (Các cạnh đi ra từ old_name)
+        # Ví dụ: old_name -> B, C đổi thành new_name -> B, C
+        if old_name in self.adj_list:
+            self.adj_list[new_name] = self.adj_list.pop(old_name)
+
+        # 4. Cập nhật Value trong Danh sách kề (Các cạnh đi vào old_name)
+        # Ví dụ: A -> old_name đổi thành A -> new_name
+        for u in self.adj_list:
+            if old_name in self.adj_list[u]:
+                # Lấy trọng số cũ ra
+                weight = self.adj_list[u].pop(old_name)
+                # Tạo kết nối tới tên mới với trọng số y hệt
+                self.adj_list[u][new_name] = weight
+
+        return True

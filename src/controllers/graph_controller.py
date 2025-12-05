@@ -1,5 +1,7 @@
 import sys
 import os
+import tkinter as tk
+from tkinter import simpledialog
 from algorithms.traversal import Traversal
 from algorithms.properties import Bipartite
 from models.graph import Graph
@@ -67,10 +69,9 @@ class GraphController:
         nodes = self.graph.nodes
         edges = self.graph.get_edges()
         is_directed = self.graph.directed
-        is_weighted = self.weighted
 
         # Gọi hàm vẽ trong Main Window
-        self.app.view.refresh_graph(nodes, edges, is_directed, is_weighted)
+        self.app.view.refresh_graph(nodes, edges, is_directed)
 
     def get_matrix_info(self):
         """Hàm này dùng cho tính năng 'Xem Ma trận'"""
@@ -124,6 +125,85 @@ class GraphController:
             self.app.view.log(msg)
             messagebox.showerror("Kết quả", msg)
             self.refresh_view()
+
+    # --- LOGIC CONTEXT MENU (CHUỘT PHẢI) ---
+
+    def show_node_context_menu(self, event, node_id):
+        """Hiện menu khi click chuột phải vào Đỉnh"""
+        menu = tk.Menu(self.app.root, tearoff=0)
+        menu.add_command(label=f"Đỉnh: {node_id}", state="disabled", font=("Arial", 10, "bold"))
+        menu.add_separator()
+        menu.add_command(label="Đổi tên Đỉnh", command=lambda: self.handle_rename_node(node_id))
+        menu.add_command(label="Xóa Đỉnh này", command=lambda: self.delete_node(node_id))
+        
+        # Hiện menu ngay tại vị trí con trỏ chuột
+        menu.post(event.x_root, event.y_root)
+
+    def show_edge_context_menu(self, event, u, v):
+        """Hiện menu khi click chuột phải vào Cạnh"""
+        menu = tk.Menu(self.app.root, tearoff=0)
+        menu.add_command(label=f"Cạnh: {u} -> {v}", state="disabled", font=("Arial", 10, "bold"))
+        menu.add_separator()
+        menu.add_command(label="Sửa Trọng số", command=lambda: self.edit_edge_weight(u, v))
+        menu.add_command(label="Xóa Cạnh này", command=lambda: self.delete_edge(u, v))
+        
+        menu.post(event.x_root, event.y_root)
+
+    # --- CÁC HÀM XỬ LÝ LOGIC ---
+
+    def delete_node(self, node_id):
+        if messagebox.askyesno("Xác nhận", f"Bạn có chắc muốn xóa đỉnh {node_id} và các cạnh liên quan?"):
+            self.graph.remove_node(node_id)
+            self.app.view.log(f"Đã xóa đỉnh: {node_id}")
+            self.refresh_view()
+
+    def delete_edge(self, u, v):
+        if messagebox.askyesno("Xác nhận", f"Xóa cạnh {u}-{v}?"):
+            self.graph.remove_edge(u, v)
+            self.app.view.log(f"Đã xóa cạnh: {u}-{v}")
+            self.refresh_view()
+
+    def edit_edge_weight(self, u, v):
+        # Lấy trọng số hiện tại (mặc định 1.0 nếu lỗi)
+        current_w = self.graph.adj_list[u].get(v, 1.0)
+        
+        # Hiện popup nhập liệu
+        new_w_str = simpledialog.askstring(
+            "Sửa trọng số", 
+            f"Nhập trọng số mới cho {u}->{v}:", 
+            initialvalue=str(current_w),
+            parent=self.app.root
+        )
+        
+        if new_w_str is not None:
+            try:
+                new_w = float(new_w_str)
+                # Ghi đè cạnh cũ bằng trọng số mới
+                self.graph.add_edge(u, v, new_w)
+                self.app.view.log(f"Đã cập nhật trọng số {u}->{v}: {new_w}")
+                self.refresh_view()
+            except ValueError:
+                self.app.view.log("Lỗi: Trọng số phải là số!")
+
+    def handle_rename_node(self, old_name):
+        new_name = simpledialog.askstring(
+            "Đổi tên", 
+            f"Nhập tên mới cho đỉnh '{old_name}':", 
+            parent=self.app.root
+        )
+        
+        if new_name:
+            new_name = new_name.strip().upper()
+            # Gọi hàm rename trong Model (Bạn cần đảm bảo file graph.py đã có hàm rename_node)
+            if hasattr(self.graph, 'rename_node'):
+                success = self.graph.rename_node(old_name, new_name)
+                if success:
+                    self.app.view.log(f"Đổi tên: {old_name} -> {new_name}")
+                    self.refresh_view()
+                else:
+                    messagebox.showerror("Lỗi", "Tên mới đã tồn tại hoặc không hợp lệ!")
+            else:
+                 self.app.view.log("Model Graph chưa hỗ trợ đổi tên (cần thêm hàm rename_node).")
 
     def apply_coloring(self, color_map):
         visual_colors = {

@@ -11,7 +11,12 @@ class AppController:
         self.file_ctrl = FileController()
         self.view = MainWindow(root, self)
 
-    
+    def show_node_context_menu(self, event, node_id):
+        self.graph_ctrl.show_node_context_menu(event, node_id)
+
+    def show_edge_context_menu(self, event, u, v):
+        self.graph_ctrl.show_edge_context_menu(event, u, v)
+
     def action_add_edge(self):
         # Lấy dữ liệu từ View input
         u = self.view.control_panel.ent_u.get()
