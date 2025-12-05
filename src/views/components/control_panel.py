@@ -33,7 +33,8 @@ class ControlPanel(tk.Frame):
         self.var_directed = tk.BooleanVar(value=True)
         tk.Checkbutton(frame_config, text="Đồ thị CÓ HƯỚNG", var=self.var_directed,
                        bg=self.bg_color, command=self.controller.toggle_mode).pack(anchor="w", padx=5)
-
+        # Fix chỗ này lỗi sai tên biến.
+        self.var_weighted = tk.BooleanVar(value=False)
         # Input Grid
         grid_input = tk.Frame(frame_config, bg=self.bg_color)
         grid_input.pack(fill=tk.X, padx=5, pady=5)
