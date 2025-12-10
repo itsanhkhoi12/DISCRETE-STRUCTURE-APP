@@ -3,7 +3,8 @@ from src.controllers.graph_controller import GraphController
 from src.utils.converters import GraphConverter
 from src.views.components.converter_view import ConverterView
 from src.controllers.file_controller import FileController
-from src.algorithms.mst import run_prim, run_kruskal
+from src.algorithms.traversal import Traversal
+from src.algorithms.properties import Bipartite
 
 
 class AppController:
@@ -12,6 +13,12 @@ class AppController:
         self.graph_ctrl = GraphController(self)
         self.file_ctrl = FileController()
         self.view = MainWindow(root, self)
+
+    def show_node_context_menu(self, event, node_id):
+        self.graph_ctrl.show_node_context_menu(event, node_id)
+
+    def show_edge_context_menu(self, event, u, v):
+        self.graph_ctrl.show_edge_context_menu(event, u, v)
 
     def action_add_edge(self):
         # Lấy dữ liệu từ View input
@@ -69,18 +76,6 @@ class AppController:
                 weighted=load_result['weighted']
             )
             self.view.control_panel.var_directed.set(load_result['directed'])
-            self.view.control_panel.var_weighted.set(load_result['weighted'])
-
-            # 3. Yêu cầu View vẽ lại và cập nhật thông tin (Nếu có hàm tương tự)
-            # Giả sử View có hàm update_display()
-            # self.view.update_display()
-
-            # Nếu bạn đang sử dụng logic update trong GraphController
-            # (như handle_toggle_mode), có thể gọi nó thay vì cập nhật trực tiếp View
-
-            # Tạm thời gọi lại hàm vẽ và cập nhật info từ View (cần được bạn tự định nghĩa)
-            # self.view.refresh_all()
-            pass
 
     def run_basic_algo(self, algo_type):
         self.view.log(f"--- Đang thực hiện: {algo_type} ---")
@@ -94,34 +89,4 @@ class AppController:
             self.graph_ctrl.handle_traversal(algo_type, start_node)
 
     def run_advanced_algo(self):
-        algo = self.view.control_panel.combo_algo.get()
-        g = self.graph_ctrl.graph
-
-        if algo == "Prim":
-            edges = run_prim(g)
-            total = sum(w for _, _, w in edges)
-            print(f"\n=== KẾT QUẢ PRIM ===")
-            print(f"Tổng trọng số cây khung: {total}")
-            for u, v, w in edges:
-                print(f"  {u} — {v}: {w}")
-            print("="*40)
-
-        elif algo == "Kruskal":
-            edges = run_kruskal(g)
-            total = sum(w for _, _, w in edges)
-            print(f"\n=== KẾT QUẢ KRUSKAL ===")
-            print(f"Tổng trọng số cây khung: {total}")
-            for u, v, w in edges:
-                print(f"  {u} — {v}: {w}")
-            print("="*40)
-
-        else:
-            print("Chưa hỗ trợ thuật toán:", algo)
-            self.view.control_panel.append_log(f"Chưa hỗ trợ: {algo}")
-            return
-
-    # VẼ LÊN CANVAS (xanh lá)
-        self.view.canvas_view.highlight_edges(edges, color="#00FF00")
-        self.view.control_panel.append_log(
-            f"{algo.upper()} hoàn thành! Tô {len(edges)} cạnh – Tổng trọng số: {total}"
-        )
+        pass

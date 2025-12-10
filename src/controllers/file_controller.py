@@ -1,5 +1,5 @@
 from tkinter import filedialog, messagebox
-from src.utils.file_processor import FileProcessor
+from utils.file_processor import FileProcessor
 from src.models.graph import Graph
 
 
