@@ -39,18 +39,18 @@ class Euler():
                     odd += 1
             return odd == 0 or odd == 2
 
-        # tìm điểm bắt đầu (nếu không truyền start)
+        # tìm điểm bắt đầu (nếu không truyền start), trường hợp là đường đi Euler thì sẽ bắt đầu tại đỉnh lẻ
         def find_start():
             for u in graph:
                 if len(graph[u]) % 2 == 1:
                     return u
             return list(graph.keys())[0]
 
-        # xử lý start nếu người dùng không set đúng
+        # xử lý start nếu không set đúng
         if start is None:
             start = find_start()
 
-        # nếu không có đường đi Euler → dừng
+        # nếu không có đường đi Euler thì dừng
         if not has_euler():
             return None
 
