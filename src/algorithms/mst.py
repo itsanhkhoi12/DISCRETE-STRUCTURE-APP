@@ -1,70 +1,74 @@
-
-from typing import List, Tuple
 import heapq
-# Thuật toán Prim
+from src.models.graph import Graph
 
 
-def prim(graph) -> Tuple[List[Tuple[str, str, float]], float]:
-    if not graph.nodes:
-        return [], 0.0
+class MSTAlgorithms:
+    def __init__(self, graph):
+        self.graph = graph
 
-    start_vertex = min(iter(graph.nodes))
+    def prim_mst(self, start_node=None):
+        if not self.graph.nodes:
+            return [], 0.0
+        if start_node is None:
+            start_node = next(iter(self.graph.nodes))
+        visited = set([start_node])
+        pq = []  # (weight, u, v)
+        # Thêm cạnh kề với start_node
+        for v, w in self.graph.adj_list.get(start_node, {}).items():
+            heapq.heappush(pq, (w, start_node, v))
+        mst_edges = []
+        total_weight = 0.0
+        while pq:
+            w, u, v = heapq.heappop(pq)
+            if v not in visited:
+                visited.add(v)
+                mst_edges.append((u, v, w))
+                total_weight += w
+                for neighbor, weight in self.graph.adj_list.get(v, {}).items():
+                    if neighbor not in visited:
+                        heapq.heappush(pq, (weight, v, neighbor))
+        return mst_edges, total_weight
 
-    visited = set()
-    parent = {v: None for v in graph.nodes}
-    key = {v: float('inf') for v in graph.nodes}
-    key[start_vertex] = 0.0
+    def kruskal_mst(self):
+        if not self.graph.nodes:
+            return [], 0.0
+        # Lấy danh sách cạnh
+        edges = []
+        seen = set()
+        for u in self.graph.adj_list:
+            for v, w in self.graph.adj_list[u].items():
+                edge_key = tuple(sorted([u, v]))
+                if edge_key not in seen:
+                    edges.append((w, u, v))
+                    seen.add(edge_key)
+        edges.sort()  # Sắp xếp theo trọng số tăng dần
+        # Union-Find
+        parent = {node: node for node in self.graph.nodes}
+        rank = {node: 0 for node in self.graph.nodes}
 
-    pq = [(0.0, start_vertex)]
-    mst_edges = []
-    total_weight = 0.0
-    while pq:
-        current_weight, u = heapq.heappop(pq)
-        if u in visited:
-            continue
-        visited.add(u)
-        if parent[u] is not None:
-            mst_edges.append((parent[u], u, current_weight))
-            total_weight += current_weight
-        for v, weight in graph.adj_list[u].items():
-            if v not in visited and weight < key[v]:
-                key[v] = weight
-                parent[v] = u
-                heapq.heappush(pq, (weight, v))
-    return mst_edges, total_weight
-# Thuật toán kruskal
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])
+            return parent[x]
 
-
-def kruskal(graph) -> Tuple[List[Tuple[str, str, float]], float]:
-    if not graph.nodes:
-        return [], 0.0
-    edges = sorted(graph.get_edges(), key=lambda x: x[2])
-    parent = {v: v for v in graph.nodes}
-    rank = {v: 0 for v in graph.nodes}
-
-    def find(x):
-        if parent[x] != x:
-            parent[x] = find(parent[x])
-        return parent[x]
-
-    def union(x, y):
-        px, py = find(x), find(y)
-        if px == py:
-            return False
-        if rank[px] < rank[py]:
-            parent[px] = py
-        elif rank[px] > rank[py]:
-            parent[py] = px
-        else:
-            parent[py] = px
-            rank[px] += 1
-        return True
-    mst_edges = []
-    total_weight = 0.0
-    for u, v, w in edges:
-        if union(u, v):
-            mst_edges.append((u, v, w))
-            total_weight += w
-            if len(mst_edges) == len(graph.nodes) - 1:
+        def union(x, y):
+            px, py = find(x), find(y)
+            if px == py:
+                return False
+            if rank[px] < rank[py]:
+                parent[px] = py
+            elif rank[px] > rank[py]:
+                parent[py] = px
+            else:
+                parent[py] = px
+                rank[px] += 1
+            return True
+        mst_edges = []
+        total_weight = 0.0
+        for w, u, v in edges:
+            if union(u, v):
+                mst_edges.append((u, v, w))
+                total_weight += w
+            if len(mst_edges) == len(self.graph.nodes)-1:
                 break
-    return mst_edges, total_weight
+        return mst_edges, total_weight
