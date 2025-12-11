@@ -2,73 +2,77 @@ import heapq
 from src.models.graph import Graph
 
 
-class MSTAlgorithms:
-    def __init__(self, graph):
-        self.graph = graph
+class MST:
+    @staticmethod
+    def prim(graph: Graph):
+        """
+        Trả về: (danh_sách_cạnh, tổng_trọng_số)
+        danh_sách_cạnh = [(u, v, weight)]
+        """
+        # Kiểm tra Nếu đồ thị rỗng
+        if not graph.nodes:
+            return [], 0
 
-    def prim_mst(self, start_node=None):
-        if not self.graph.nodes:
-            return [], 0.0
-        if start_node is None:
-            start_node = next(iter(self.graph.nodes))
-        visited = set([start_node])
-        pq = []  # (weight, u, v)
-        # Thêm cạnh kề với start_node
-        for v, w in self.graph.adj_list.get(start_node, {}).items():
-            heapq.heappush(pq, (w, start_node, v))
+        # Chọn 1 đỉnh bất kỳ làm điểm bắt đầu
+        start = next(iter(graph.nodes))
+        visited = set([start])
         mst_edges = []
-        total_weight = 0.0
-        while pq:
-            w, u, v = heapq.heappop(pq)
+        total_weight = 0
+
+        # Tạo heap các cạnh từ đỉnh start
+        edge_heap = []
+        for v, w in graph.adj_list[start].items():
+            heapq.heappush(edge_heap, (w, start, v))
+
+        # Lặp cho đến khi tất cả đỉnh được thăm
+        while edge_heap and len(visited) < len(graph.nodes):
+            w, u, v = heapq.heappop(edge_heap)
             if v not in visited:
                 visited.add(v)
                 mst_edges.append((u, v, w))
                 total_weight += w
-                for neighbor, weight in self.graph.adj_list.get(v, {}).items():
-                    if neighbor not in visited:
-                        heapq.heappush(pq, (weight, v, neighbor))
+
+                # Thêm tất cả cạnh mới từ đỉnh v vào heap
+                for to, weight in graph.adj_list[v].items():
+                    if to not in visited:
+                        heapq.heappush(edge_heap, (weight, v, to))
+
         return mst_edges, total_weight
 
-    def kruskal_mst(self):
-        if not self.graph.nodes:
-            return [], 0.0
-        # Lấy danh sách cạnh
-        edges = []
-        seen = set()
-        for u in self.graph.adj_list:
-            for v, w in self.graph.adj_list[u].items():
-                edge_key = tuple(sorted([u, v]))
-                if edge_key not in seen:
-                    edges.append((w, u, v))
-                    seen.add(edge_key)
-        edges.sort()  # Sắp xếp theo trọng số tăng dần
-        # Union-Find
-        parent = {node: node for node in self.graph.nodes}
-        rank = {node: 0 for node in self.graph.nodes}
+    @staticmethod
+    def kruskal(graph: Graph):
+        """
+        Trả về: (danh_sách_cạnh, tổng_trọng_số)
+        danh_sách_cạnh = [(u, v, weight)]
+        """
+        class UnionFind:
+            def __init__(self, nodes):
+                self.parent = {node: node for node in nodes}
 
-        def find(x):
-            if parent[x] != x:
-                parent[x] = find(parent[x])
-            return parent[x]
+            def find(self, u):
+                if self.parent[u] != u:
+                    self.parent[u] = self.find(self.parent[u])
+                return self.parent[u]
 
-        def union(x, y):
-            px, py = find(x), find(y)
-            if px == py:
-                return False
-            if rank[px] < rank[py]:
-                parent[px] = py
-            elif rank[px] > rank[py]:
-                parent[py] = px
-            else:
-                parent[py] = px
-                rank[px] += 1
-            return True
+            def union(self, u, v):
+                pu, pv = self.find(u), self.find(v)
+                if pu == pv:
+                    return False
+                self.parent[pu] = pv
+                return True
+
+        uf = UnionFind(graph.nodes)
         mst_edges = []
-        total_weight = 0.0
-        for w, u, v in edges:
-            if union(u, v):
+        total_weight = 0
+
+        # Lấy danh sách các cạnh và sắp xếp theo trọng số
+        edges = graph.get_edges()
+        edges.sort(key=lambda x: x[2])  # x[2] = trọng số
+
+        # Lặp qua các cạnh
+        for u, v, w in edges:
+            if uf.union(u, v):  # nếu u, v chưa cùng tập hợp
                 mst_edges.append((u, v, w))
                 total_weight += w
-            if len(mst_edges) == len(self.graph.nodes)-1:
-                break
+
         return mst_edges, total_weight
