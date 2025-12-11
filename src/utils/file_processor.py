@@ -1,7 +1,10 @@
 import json
 
+
+
 class FileProcessor:
-    #Ghi dữ liệu dictionary vào file JSON
+    # Ghi dữ liệu dictionary vào file JSON
+
     @staticmethod
     def write_json(file_path, data):
         try:
@@ -11,7 +14,9 @@ class FileProcessor:
         except Exception as e:
             return False, str(e)
 
-    #Đọc dữ liệu từ file JSON
+
+    # Đọc dữ liệu từ file JSON
+
     @staticmethod
     def read_json(file_path):
         try:
@@ -20,3 +25,4 @@ class FileProcessor:
             return True, data
         except Exception as e:
             return False, str(e)
+

@@ -4,9 +4,9 @@ class Graph:
         Khởi tạo Graph là một Danh sách đỉnh liền kề.
         Format: Đỉnh: {Danh sách các đỉnh liền kề với đỉnh đó}
         """
-        self.nodes = set()      
-        self.adj_list = {}      
-        self.directed = directed 
+        self.nodes = set()
+        self.adj_list = {}
+        self.directed = directed
         self.weighted = weighted
 
     def set_directed(self, is_directed):
@@ -17,9 +17,9 @@ class Graph:
             for u in self.adj_list:
                 for v, w in self.adj_list[u].items():
                     snapshot.append((u, v, w))
-            
+
             for u, v, w in snapshot:
-                self.add_edge(v, u, w) # Thêm chiều ngược lại
+                self.add_edge(v, u, w)  # Thêm chiều ngược lại
 
     def add_node(self, node):
         """Thêm một đỉnh mới"""
@@ -38,16 +38,16 @@ class Graph:
             w_val = float(weight)
 
         # 1. Thêm chiều thuận u -> v
-        self.adj_list[u][v] = w_val # <-- Dùng w_val
-        
+        self.adj_list[u][v] = w_val  # <-- Dùng w_val
+
         # 2. Nếu là đồ thị vô hướng, tự động thêm chiều ngược v -> u
         if not self.directed:
-            self.adj_list[v][u] = w_val # <-- Dùng w_val
+            self.adj_list[v][u] = w_val  # <-- Dùng w_val
 
     def get_edges(self):
         """Trả về danh sách tất cả các cạnh [(u, v, w), ...]"""
         edges = []
-        seen = set() 
+        seen = set()
 
         for u in self.adj_list:
             for v, w in self.adj_list[u].items():
@@ -67,18 +67,18 @@ class Graph:
         """
         sorted_nodes = sorted(list(self.nodes))
         n = len(sorted_nodes)
-        
+
         idx_map = {node: i for i, node in enumerate(sorted_nodes)}
-        
+
         matrix = [[0] * n for _ in range(n)]
 
         for u in self.adj_list:
             for v, w in self.adj_list[u].items():
                 i, j = idx_map[u], idx_map[v]
                 matrix[i][j] = w
-        
+
         return matrix, sorted_nodes
-    
+
     @classmethod
     def from_data(cls, nodes, edges, directed, weighted=True):
         """
@@ -87,28 +87,29 @@ class Graph:
         """
         # 1. Khởi tạo đối tượng Graph mới với các cờ (flags) đúng
         instance = cls(directed=directed, weighted=weighted)
-        
+
         # 2. Thêm các đỉnh
         for node in nodes:
             instance.add_node(node)
-            
+
         # 3. Thêm các cạnh (kèm trọng số)
         # edge có format: (u, v, {'weight': w})
         for u, v, attrs in edges:
             weight = attrs.get('weight', 1.0)
             instance.add_edge(u, v, weight)
-            
+
         return instance
 
     def remove_node(self, node):
         """Xóa đỉnh và tất cả các cạnh liên quan"""
         if node in self.nodes:
             self.nodes.remove(node)
-        
+
         # 1. Xóa trong adj_list (chiều đi)
         if node in self.adj_list:
             del self.adj_list[node]
-        
+
+
         # 2. Xóa các cạnh chiều đến (chiều về từ đỉnh khác)
         for u in list(self.adj_list.keys()):
             if node in self.adj_list[u]:
@@ -118,7 +119,7 @@ class Graph:
         """Xóa cạnh u -> v"""
         if u in self.adj_list and v in self.adj_list[u]:
             del self.adj_list[u][v]
-        
+
         # Nếu vô hướng, xóa cả v -> u
         if not self.directed:
             if v in self.adj_list and u in self.adj_list[v]:
@@ -136,9 +137,11 @@ class Graph:
         """
         # 1. Kiểm tra tính hợp lệ
         if old_name not in self.nodes:
-            return False # Đỉnh cũ không tồn tại
+
+            return False  # Đỉnh cũ không tồn tại
         if new_name in self.nodes:
-            return False # Tên mới đã tồn tại (tránh gộp đỉnh)
+            return False  # Tên mới đã tồn tại (tránh gộp đỉnh)
+
         if old_name == new_name:
             return False
 
@@ -161,3 +164,4 @@ class Graph:
                 self.adj_list[u][new_name] = weight
 
         return True
+

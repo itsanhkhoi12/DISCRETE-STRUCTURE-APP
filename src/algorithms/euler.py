@@ -1,130 +1,86 @@
-from models.graph import Graph
+
+from src.models.graph import Graph
+import copy
+
 
 class Euler():
     @staticmethod
-    def fleury(graph, start):
-    # dfs
-        def dfs(u, visited):
-            visited.add(u)
-            for v in graph[u]:
-                if v not in visited:
-                    dfs(v, visited)
-
-        # kiểm tra cạnh có phải cầu không
-        def is_not_bridge(u, v):
-            if len(graph[u]) == 1:
-                return True
-
-            visited = set()
-            dfs(u, visited)
-            count1 = len(visited)
-
-            graph[u].remove(v)
-            graph[v].remove(u)
-
-            visited = set()
-            dfs(u, visited)
-            count2 = len(visited)
-
-            graph[u].append(v)
-            graph[v].append(u)
-
-            return count1 == count2
-
-        # kiểm tra điều kiện Euler
-        def has_euler():
-            odd = 0
-            for u in graph:
-                if len(graph[u]) % 2 == 1:
-                    odd += 1
-            return odd == 0 or odd == 2
-
-        # tìm điểm bắt đầu (nếu không truyền start), trường hợp là đường đi Euler thì sẽ bắt đầu tại đỉnh lẻ
-        def find_start():
-            for u in graph:
-                if len(graph[u]) % 2 == 1:
-                    return u
-            return list(graph.keys())[0]
-
-        # xử lý start nếu không set đúng
-        if start is None:
-            start = find_start()
-
-        # nếu không có đường đi Euler thì dừng
-        if not has_euler():
+    def fleury(graph: Graph):
+        adj_copy = copy.deepcopy(graph.adj_list)
+        # Chọn đỉnh bắt đầu
+        start_node = None
+        for node in graph.nodes:
+            if len(adj_copy.get(node, {})) % 2 == 0:
+                start_node = node
+            break
+        if start_node is None and graph.nodes:
+            start_node = next(iter(graph.nodes))
+        if start_node is None:
+            return None
+        # Chạy bắt đầu từ start_node
+        path = []
+        path.append(start_node)
+        current = start_node
+        # Lặp đến hết cạnh từ đỉnh hiện tại. Nếu đỉnh không có cạnh nào thì dừng.
+        while True:
+            current_neightbors = adj_copy.get(current, {})
+            # Kiểm tra không có cạnh nào thì dừng
+            if len(current_neightbors) == 0:
+                break
+            next_node = next(iter(current_neightbors))
+            del adj_copy[current][next_node]
+            if next_node in adj_copy and current in adj_copy[next_node]:
+                del adj_copy[next_node][current]
+            # Đi sang đỉnhh tiếp theo
+            path.append(next_node)
+            current = next_node
+        # Kiểm tra đã chạy qua hết cạnh chưa
+        total_edges_in_graph = len(graph.get_edges())
+        if len(path) == total_edges_in_graph+1:
+            return path
+        else:
             return None
 
-        # Fleury
-        path = [start]
-        u = start
-
-        while True:
-            if not graph[u]:
-                break
-
-            for v in list(graph[u]):
-                if is_not_bridge(u, v):
-                    graph[u].remove(v)
-                    graph[v].remove(u)
-                    path.append(v)
-                    u = v
-                    break
-
-        return path
-
     @staticmethod
-    def hierholzer(graph):
-        #vì thuật toán sẽ xóa cạnh dần dần, cần copy để không mất dữ liệu gốc
-        adj = {}
-        degrees = {}
-        
-        for u, neighbors in graph.items():
-            # Chuyển đổi {v: w} hoặc set(v) thành list [v]
-            if isinstance(neighbors, dict):
-                adj[u] = list(neighbors.keys())
+    def hierholzer(graph: Graph):
+        """
+        Cách hoạt động: đi lòng vòng, khi không đi được nữa thì quay lại
+        Trả về:
+            - Danh sách các đỉnh theo thứ tự đi qua (ví dụ: [0 -> 1 -> 2 -> 0)
+            - Nếu không tìm được chu trình hoàn chỉnh thì trả về None
+        """
+        adj_copy = copy.deepcopy(graph.adj_list)
+        start_node = None
+        for node in graph.nodes:
+            if len(adj_copy.get(node, {})) % 2 == 1:
+                start_node = node
+                break
+        if start_node is None and graph.nodes:
+            start_node = next(iter(graph.nodes))
+        # Kiểm tra đồ thị có rỗng không
+        if start_node is None:
+            return None
+        stack = []  # Để lưu trữ đường đi
+        stack.append(start_node)
+        euler_path = []  # Lưu ds kết quả
+        while len(stack) > 0:
+            current = stack[-1]
+            if current in adj_copy and len(adj_copy[current]) > 0:
+                next_node = next(iter(adj_copy[current]))
+                stack.append(next_node)
+                # Xóa cạnh đồ thị vừa đi
+                del adj_copy[current][next_node]
+                if next_node in adj_copy and current in adj_copy[next_node]:
+                    del adj_copy[next_node][current]
             else:
-                adj[u] = list(neighbors)
-            degrees[u] = len(adj[u])
+                # Không còn đường đi thì lấy ra stack và thêm vào ds kết quả
+                finished_node = stack.pop()
+                euler_path.append(finished_node)
+        euler_path.reverse()
+        # Kiểm tra đã đi qua hết cạnh trong đồ thị chưa.
+        total_edges_in_graph = len(graph.get_edges())
+        if len(euler_path) == total_edges_in_graph+1:
+            return euler_path
+        else:
+            return None
 
-        #kiểm tra điều kiện Euler
-        odd_degree_nodes = [u for u in degrees if degrees[u] % 2 != 0]
-        
-        if len(odd_degree_nodes) not in [0, 2]:
-            return None #không có đường đi/chu trình Euler
-
-        #xác định điểm bắt đầu
-        if start is None:
-            if len(odd_degree_nodes) == 2:
-                start = odd_degree_nodes[0] #bắt buộc xuất phát ở đỉnh bậc lẻ
-            else:
-                #tìm đỉnh đầu tiên có bậc > 0
-                for u in adj:
-                    if len(adj[u]) > 0:
-                        start = u
-                        break
-                if start is None and adj: #trường hợp đồ thị chỉ có đỉnh cô lập
-                    start = list(adj.keys())[0]
-
-        #thuật toán Hierholzer (Sử dụng Stack)
-        stack = [start]
-        circuit = []
-
-        while stack:
-            u = stack[-1] #lấy đỉnh ở đỉnh stack
-            
-            #nếu u còn cạnh nối tới đỉnh khác
-            if u in adj and len(adj[u]) > 0:
-                v = adj[u][0] #lấy cạnh đầu tiên
-                
-                stack.append(v) #push v vào stack
-                
-                #xóa cạnh (u, v) khỏi đồ thị tạm
-                adj[u].remove(v)
-                if v in adj: #đồ thị vô hướng: xóa cả chiều ngược lại
-                    adj[v].remove(u)
-            else:
-                #nếu u không còn cạnh nào, thêm vào kết quả và backtrack
-                circuit.append(stack.pop())
-
-        #kết quả của Hierholzer là ngược lại, cần đảo ngược list
-        return circuit[::-1]

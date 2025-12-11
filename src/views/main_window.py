@@ -1,6 +1,7 @@
 import tkinter as tk
-from .components.control_panel import ControlPanel
-from .components.canvas_view import CanvasView
+from src.views.components.control_panel import ControlPanel
+from src.views.components.canvas_view import CanvasView
+
 
 class MainWindow:
     def __init__(self, root, controller):
@@ -11,23 +12,30 @@ class MainWindow:
                 
         # Màu nền chung
         BG_COLOR = "#f4f6f7"
-        
+
         # Setup Layout chính (PanedWindow)
-        main_container = tk.PanedWindow(self.root, orient=tk.HORIZONTAL, bg="#2c3e50")
+        main_container = tk.PanedWindow(
+            self.root, orient=tk.HORIZONTAL, bg="#2c3e50")
         main_container.pack(fill=tk.BOTH, expand=True)
 
         # 1. Khởi tạo Control Panel (Truyền controller vào để xử lý nút bấm)
-        self.control_panel = ControlPanel(main_container, controller=self.controller, bg=BG_COLOR, width=350)
+        self.control_panel = ControlPanel(
+            main_container, controller=self.controller, bg=BG_COLOR, width=350)
         main_container.add(self.control_panel)
 
         # 2. Khởi tạo Canvas View
-        self.canvas_view = CanvasView(main_container,controller=self.controller, bg="white")
+
+        self.canvas_view = CanvasView(
+            main_container, controller=self.controller, bg="white")
+
         main_container.add(self.canvas_view)
-    
+
     # SỬA ĐỔI: Thêm tham số 'is_weighted'
-    def refresh_graph(self, nodes, edges, is_directed): 
+
+    def refresh_graph(self, nodes, edges, is_directed):
         """Hàm này để Controller gọi khi cần vẽ lại đồ thị"""
-        self.canvas_view.draw_graph(nodes, edges, is_directed) 
+        self.canvas_view.draw_graph(nodes, edges, is_directed)
+
 
     def log(self, message):
         """Hàm này để Controller gọi khi cần ghi log"""

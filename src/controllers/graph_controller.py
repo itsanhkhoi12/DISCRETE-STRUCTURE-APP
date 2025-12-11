@@ -2,17 +2,14 @@ import sys
 import os
 import tkinter as tk
 from tkinter import simpledialog
-from algorithms.traversal import Traversal
-from algorithms.properties import Bipartite
-from models.graph import Graph
+from src.algorithms.traversal import Traversal
+from src.algorithms.properties import Bipartite
+from src.models.graph import Graph
 from tkinter import messagebox
 
-current_dir = os.path.dirname(os.path.abspath(__file__)) 
-parent_dir = os.path.dirname(current_dir) 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
-
-
-
 class GraphController:
     def __init__(self, app_controller):
         self.app = app_controller
@@ -24,7 +21,7 @@ class GraphController:
         """Xử lý khi user bấm nút 'Thêm'"""
         u = u.strip().upper()
         v = v.strip().upper()
-        
+
         if not u or not v:
             self.app.view.log("Lỗi: Tên đỉnh không được để trống.")
             return
@@ -43,10 +40,10 @@ class GraphController:
     def handle_toggle_mode(self, is_directed):
         """Xử lý khi user tích vào checkbox Có hướng/Vô hướng"""
         self.graph.set_directed(is_directed)
-        
+
         mode = "CÓ HƯỚNG" if is_directed else "VÔ HƯỚNG"
         self.app.view.log(f"Đã chuyển chế độ sang: {mode}")
-        
+
         self.refresh_view()
 
     def set_new_graph(self, graph, directed, weighted):
@@ -76,13 +73,11 @@ class GraphController:
     def get_matrix_info(self):
         """Hàm này dùng cho tính năng 'Xem Ma trận'"""
         return self.graph.get_adjacency_matrix()
-
-    def handle_traversal(self,method,start_node):
+    def handle_traversal(self, method, start_node):
         start_node = start_node.strip().upper()
         if not start_node:
             messagebox.showwarning("Cảnh báo", "Cần nhập đỉnh bắt đầu!")
             return
-        
         path = []
         if method == 'BFS':
             path = Traversal.bfs_traversal(self.graph, start_node)
@@ -90,9 +85,9 @@ class GraphController:
             path = Traversal.dfs_traversal(self.graph, start_node)
 
         if not path:
-            self.app.view.log(f"Không tìm thấy đường đi hoặc đỉnh bắt đầu {start_node} không tồn tại!")
+            self.app.view.log(
+                f"Không tìm thấy đường đi hoặc đỉnh bắt đầu {start_node} không tồn tại!")
             return
-        
         result = '->'.join(path)
         self.app.view.log(f"Kết quả {method} từ đỉnh {start_node}: ")
         self.app.view.log(result)
@@ -113,7 +108,6 @@ class GraphController:
             msg = "KẾT LUẬN: Đây là đồ thị 2 phía."
             self.app.view.log(msg)
             messagebox.showinfo("Kết quả", msg)
-            
             v1 = [n for n, c in color_map.items() if c == 1]
             v2 = [n for n, c in color_map.items() if c == 2]
             self.app.view.log(f"-> Tập 1 (Đỏ): {v1}")
@@ -131,22 +125,31 @@ class GraphController:
     def show_node_context_menu(self, event, node_id):
         """Hiện menu khi click chuột phải vào Đỉnh"""
         menu = tk.Menu(self.app.root, tearoff=0)
-        menu.add_command(label=f"Đỉnh: {node_id}", state="disabled", font=("Arial", 10, "bold"))
+
+        menu.add_command(
+            label=f"Đỉnh: {node_id}", state="disabled", font=("Arial", 10, "bold"))
         menu.add_separator()
-        menu.add_command(label="Đổi tên Đỉnh", command=lambda: self.handle_rename_node(node_id))
-        menu.add_command(label="Xóa Đỉnh này", command=lambda: self.delete_node(node_id))
-        
+        menu.add_command(label="Đổi tên Đỉnh",
+                         command=lambda: self.handle_rename_node(node_id))
+        menu.add_command(label="Xóa Đỉnh này",
+                         command=lambda: self.delete_node(node_id))
+
         # Hiện menu ngay tại vị trí con trỏ chuột
         menu.post(event.x_root, event.y_root)
 
     def show_edge_context_menu(self, event, u, v):
         """Hiện menu khi click chuột phải vào Cạnh"""
         menu = tk.Menu(self.app.root, tearoff=0)
-        menu.add_command(label=f"Cạnh: {u} -> {v}", state="disabled", font=("Arial", 10, "bold"))
+
+        menu.add_command(
+            label=f"Cạnh: {u} -> {v}", state="disabled", font=("Arial", 10, "bold"))
         menu.add_separator()
-        menu.add_command(label="Sửa Trọng số", command=lambda: self.edit_edge_weight(u, v))
-        menu.add_command(label="Xóa Cạnh này", command=lambda: self.delete_edge(u, v))
-        
+        menu.add_command(label="Sửa Trọng số",
+                         command=lambda: self.edit_edge_weight(u, v))
+        menu.add_command(label="Xóa Cạnh này",
+                         command=lambda: self.delete_edge(u, v))
+
+
         menu.post(event.x_root, event.y_root)
 
     # --- CÁC HÀM XỬ LÝ LOGIC ---
@@ -166,15 +169,17 @@ class GraphController:
     def edit_edge_weight(self, u, v):
         # Lấy trọng số hiện tại (mặc định 1.0 nếu lỗi)
         current_w = self.graph.adj_list[u].get(v, 1.0)
-        
+
+
         # Hiện popup nhập liệu
         new_w_str = simpledialog.askstring(
-            "Sửa trọng số", 
-            f"Nhập trọng số mới cho {u}->{v}:", 
+            "Sửa trọng số",
+            f"Nhập trọng số mới cho {u}->{v}:",
             initialvalue=str(current_w),
             parent=self.app.root
         )
-        
+
+
         if new_w_str is not None:
             try:
                 new_w = float(new_w_str)
@@ -187,11 +192,13 @@ class GraphController:
 
     def handle_rename_node(self, old_name):
         new_name = simpledialog.askstring(
-            "Đổi tên", 
-            f"Nhập tên mới cho đỉnh '{old_name}':", 
+
+            "Đổi tên",
+            f"Nhập tên mới cho đỉnh '{old_name}':",
             parent=self.app.root
         )
-        
+
+
         if new_name:
             new_name = new_name.strip().upper()
             # Gọi hàm rename trong Model (Bạn cần đảm bảo file graph.py đã có hàm rename_node)
@@ -201,9 +208,13 @@ class GraphController:
                     self.app.view.log(f"Đổi tên: {old_name} -> {new_name}")
                     self.refresh_view()
                 else:
-                    messagebox.showerror("Lỗi", "Tên mới đã tồn tại hoặc không hợp lệ!")
+
+                    messagebox.showerror(
+                        "Lỗi", "Tên mới đã tồn tại hoặc không hợp lệ!")
             else:
-                 self.app.view.log("Model Graph chưa hỗ trợ đổi tên (cần thêm hàm rename_node).")
+                self.app.view.log(
+                    "Model Graph chưa hỗ trợ đổi tên (cần thêm hàm rename_node).")
+
 
     def apply_coloring(self, color_map):
         visual_colors = {
@@ -213,9 +224,10 @@ class GraphController:
         }
 
         canvas = self.app.view.canvas_view
-        
+
         for node, color_code in color_map.items():
             if node in canvas.node_positions:
                 fill_color = visual_colors.get(color_code, "#3498db")
                 x, y = canvas.node_positions[node]
                 canvas._draw_single_node(node, x, y, color=fill_color)
+
