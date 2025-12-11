@@ -76,7 +76,6 @@ class AppController:
                 weighted=load_result['weighted']
             )
             self.view.control_panel.var_directed.set(load_result['directed'])
-
     def run_basic_algo(self, algo_type):
         self.view.log(f"--- Đang thực hiện: {algo_type} ---")
         if algo_type == "BIPARTITE":
@@ -87,6 +86,7 @@ class AppController:
         elif algo_type == "BFS":
             start_node = self.view.control_panel.ent_start_node.get()
             self.graph_ctrl.handle_traversal(algo_type, start_node)
+
 
     def run_advanced_algo(self):
         pass

@@ -39,8 +39,8 @@ src/
 ├── controllers/              <-- ĐIỀU PHỐI
 │   ├── __init__.py
 │   ├── app_controller.py     # Controller tổng (Quản lý các controller con)
-│   ├── graph_controller.py   # Xử lý thêm/sửa/xóa đỉnh, cạnh
-│   ├── algorithm_controller.py # Xử lý việc gọi thuật toán (BFS, Dijkstra...)
+│   ├── graph_controller.py   # Xử lý thêm/sửa/xóa đỉnh, cạnh và các tính năng cơ bản
+│   ├── algorithm_controller.py # Xử lý việc gọi thuật toán nâng cao (Kruskal, Fleury,...)
 │   └── file_controller.py    # Xử lý nút Lưu/Mở file
 │
 ├── algorithms/               <-- CHỨA THUẬT TOÁN
@@ -54,16 +54,16 @@ src/
 │
 ├── utils/                    <-- TIỆN ÍCH
 │   ├── __init__.py
-│   ├── file_io.py            # Đọc/Ghi file JSON
+│   ├── file_processor.py     # Đọc/Ghi file JSON
 │   ├── layout_math.py        # Tính toán tọa độ (Sin/Cos)
 │   └── converters.py         # Chuyển đổi Ma trận <-> Danh sách kề
 │
 └── data/                     <-- THƯ MỤC CHỨA FILE INPUT/OUTPUT
-    ├── graph_demo.json
-    └── test_input.json
 ```
 
 ## Cập nhật
 * 23/11/2025: Tạo trước UI để dễ hình dung hơn ứng dụng BTL mình sẽ làm, từ tuần sau sẽ triển khai dần dần các yêu cầu cần thiết.
 * 30/11/2025: Thêm tính năng chuyển đổi giữa các kiểu đồ thị (Ma trận kề <-> Danh sách kề <-> Danh sách cạnh)
 * 02/12/2025: Thêm tính năng nhập/lưu đồ thị, kiểm tra đồ thị hai phía và duyệt theo BFS, DFS.
+* 03/12/2025: Sửa gọn gàng cấu trúc file của ứng dụng. Hoàn thành các tính năng cơ bản cần thiết.
+* 04/12/2025: Thêm tính năng chỉnh sửa Node, Edge của đồ thị (Xoá, cập nhật tên đỉnh, trọng số của cạnh,...)

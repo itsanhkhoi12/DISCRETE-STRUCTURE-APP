@@ -72,3 +72,4 @@ class MST:
             if len(mst_edges) == len(graph.nodes)-1:
                 break
         return mst_edges, total_weight
+

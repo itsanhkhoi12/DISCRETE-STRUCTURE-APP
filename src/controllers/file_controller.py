@@ -1,8 +1,6 @@
 from tkinter import filedialog, messagebox
 from utils.file_processor import FileProcessor
 from src.models.graph import Graph
-
-
 class FileController:
     def __init__(self):
         pass
@@ -37,7 +35,6 @@ class FileController:
 
         # Gọi tầng Utils để ghi file
         success, result = FileProcessor.write_json(filename, graph_data)
-
         if success:
             messagebox.showinfo("Thành công", "Đã lưu đồ thị!")
         else:
@@ -60,7 +57,6 @@ class FileController:
 
         # Gọi tầng Utils để đọc file
         success, data = FileProcessor.read_json(filename)
-
         if not success:
             messagebox.showerror("Lỗi", f"Không thể đọc file: {data}")
             return None

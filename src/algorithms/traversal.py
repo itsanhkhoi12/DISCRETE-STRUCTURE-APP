@@ -1,14 +1,11 @@
 from collections import deque
 from src.models.graph import Graph
-
-
 class Traversal:
     @staticmethod
     def bfs_traversal(graph: Graph, start_node):
         """Duyệt theo chiều rộng (Queue)"""
         if start_node not in graph.nodes:
             return []
-
         visited = set()
         queue = deque([start_node])
         visited.add(start_node)
@@ -19,7 +16,6 @@ class Traversal:
             traversal_path.append(u)
 
             neighbors = sorted(graph.adj_list.get(u, {}).keys())
-
             for v in neighbors:
                 if v not in visited:
                     visited.add(v)
@@ -39,7 +35,6 @@ class Traversal:
 
         while stack:
             u = stack.pop()
-
             if u not in visited:
                 visited.add(u)
                 traversal_path.append(u)

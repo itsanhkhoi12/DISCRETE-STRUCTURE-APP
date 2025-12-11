@@ -10,8 +10,10 @@ class ControlPanel(tk.Frame):
         self._init_widgets()
 
     def _init_widgets(self):
+
         tk.Label(self, text="ĐIỀU KHIỂN ĐỒ THỊ", font=(
             "Arial", 14, "bold"), bg=self.bg_color).pack(pady=(0, 10))
+
 
         # --- SECTION 1: FILE & INPUT ---
         frame_config = tk.LabelFrame(
@@ -29,7 +31,9 @@ class ControlPanel(tk.Frame):
         chk_frame.pack(fill=tk.X, padx=5)
 
         self.var_directed = tk.BooleanVar(value=True)
+
         tk.Checkbutton(chk_frame, text="Đồ thị Có Hướng", var=self.var_directed,
+
                        bg=self.bg_color, command=self.controller.toggle_mode).pack(side=tk.LEFT)
 
         grid_input = tk.Frame(frame_config, bg=self.bg_color)
@@ -57,8 +61,10 @@ class ControlPanel(tk.Frame):
                   command=self.controller.action_convert_view).pack(fill=tk.X, padx=5, pady=5)
 
         # --- SECTION 2: ALGORITHMS ---
+
         frame_algo = tk.LabelFrame(
             self, text="2. Duyệt & Kiểm tra", bg=self.bg_color, font=("Arial", 10, "bold"))
+
         frame_algo.pack(fill=tk.X, pady=10)
 
         tk.Label(frame_algo, text="Đỉnh bắt đầu:",
@@ -76,8 +82,10 @@ class ControlPanel(tk.Frame):
             "BIPARTITE")).pack(side=tk.LEFT, padx=2)
 
         # --- SECTION 3: ADVANCED ---
+
         frame_adv = tk.LabelFrame(
             self, text="3. Nâng cao", bg=self.bg_color, font=("Arial", 10, "bold"))
+
         frame_adv.pack(fill=tk.X, pady=10)
 
         tk.Label(frame_adv, text="Chọn thuật toán:",

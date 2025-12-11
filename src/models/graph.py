@@ -109,6 +109,7 @@ class Graph:
         if node in self.adj_list:
             del self.adj_list[node]
 
+
         # 2. Xóa các cạnh chiều đến (chiều về từ đỉnh khác)
         for u in list(self.adj_list.keys()):
             if node in self.adj_list[u]:
@@ -136,9 +137,11 @@ class Graph:
         """
         # 1. Kiểm tra tính hợp lệ
         if old_name not in self.nodes:
+
             return False  # Đỉnh cũ không tồn tại
         if new_name in self.nodes:
             return False  # Tên mới đã tồn tại (tránh gộp đỉnh)
+
         if old_name == new_name:
             return False
 
@@ -161,3 +164,4 @@ class Graph:
                 self.adj_list[u][new_name] = weight
 
         return True
+

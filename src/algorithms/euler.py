@@ -1,3 +1,4 @@
+
 from src.models.graph import Graph
 import copy
 
@@ -82,3 +83,4 @@ class Euler():
             return euler_path
         else:
             return None
+
