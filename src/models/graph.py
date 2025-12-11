@@ -9,6 +9,9 @@ class Graph:
         self.directed = directed 
         self.weighted = weighted
 
+    def nodes_sum(self):
+        return len(self.adj_list)
+    
     def set_directed(self, is_directed):
         """Thay đổi chế độ có hướng/vô hướng và cập nhật lại cạnh"""
         self.directed = is_directed
@@ -45,7 +48,9 @@ class Graph:
             self.adj_list[v][u] = w_val # <-- Dùng w_val
 
     def get_edges(self):
-        """Trả về danh sách tất cả các cạnh [(u, v, w), ...]"""
+        """Trả về danh sách tất cả các cạnh [(u, v, w), ...]
+            - u,v: Hai đỉnh của một cạnh
+            - w: Trọng số của cạnh đó"""
         edges = []
         seen = set() 
 
