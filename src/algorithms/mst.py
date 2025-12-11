@@ -1,14 +1,32 @@
+from models.graph import Graph
 import heapq
-from src.models.graph import Graph
-
+from typing import Tuple, List
 
 class MST:
     @staticmethod
-    def prim(graph: Graph):
+    def kruskal(graph:Graph) -> Tuple[List[Tuple],int]:
         """
-        Trả về: (danh_sách_cạnh, tổng_trọng_số)
-        danh_sách_cạnh = [(u, v, weight)]
+        Thực hiện thuật toán Kruskal để tìm cây khung nhỏ nhất (MST)
+        Args:
+            graph: Đồ thị được biểu diễn dưới dạng danh sách cạnh.
+        Returns:
+            mst_edges: Một đồ thị con biểu diễn cây khung nhỏ nhất được biểu diễn dưới dạng danh sách cạnh
+            total_weight: Tổng trọng số nhỏ nhất của đồ thị
+        """      
+        if not graph.adj_list:
+            return [],0
+        
+                
+    @staticmethod
+    def prim(graph:Graph) -> Tuple[List[Tuple],int]:
         """
+        Thực hiện thuật toán Prim để tìm cây khung nhỏ nhất (MST)
+        Args:
+            graph: Đồ thị được biểu diễn dưới dạng danh sách kề.
+        Returns:
+            mst_edges: Một đồ thị con biểu diễn cây khung nhỏ nhất được biểu diễn dưới dạng danh sách cạnh
+            total_weight: Tổng trọng số nhỏ nhất của đồ thị
+        """       
         # Kiểm tra Nếu đồ thị rỗng
         if not graph.nodes:
             return [], 0
@@ -37,7 +55,7 @@ class MST:
                     if to not in visited:
                         heapq.heappush(edge_heap, (weight, v, to))
 
-        return mst_edges, total_weight
+            return mst_edges, total_weight
 
     @staticmethod
     def kruskal(graph: Graph):
@@ -45,34 +63,3 @@ class MST:
         Trả về: (danh_sách_cạnh, tổng_trọng_số)
         danh_sách_cạnh = [(u, v, weight)]
         """
-        class UnionFind:
-            def __init__(self, nodes):
-                self.parent = {node: node for node in nodes}
-
-            def find(self, u):
-                if self.parent[u] != u:
-                    self.parent[u] = self.find(self.parent[u])
-                return self.parent[u]
-
-            def union(self, u, v):
-                pu, pv = self.find(u), self.find(v)
-                if pu == pv:
-                    return False
-                self.parent[pu] = pv
-                return True
-
-        uf = UnionFind(graph.nodes)
-        mst_edges = []
-        total_weight = 0
-
-        # Lấy danh sách các cạnh và sắp xếp theo trọng số
-        edges = graph.get_edges()
-        edges.sort(key=lambda x: x[2])  # x[2] = trọng số
-
-        # Lặp qua các cạnh
-        for u, v, w in edges:
-            if uf.union(u, v):  # nếu u, v chưa cùng tập hợp
-                mst_edges.append((u, v, w))
-                total_weight += w
-
-        return mst_edges, total_weight
