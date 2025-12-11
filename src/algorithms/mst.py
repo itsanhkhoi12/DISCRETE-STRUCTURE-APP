@@ -68,22 +68,3 @@ def kruskal(graph) -> Tuple[List[Tuple[str, str, float]], float]:
             if len(mst_edges) == len(graph.nodes) - 1:
                 break
     return mst_edges, total_weight
-# Hàm gọi từ giao diện
-
-
-def run_prim(graph):
-    edges, weight = prim(graph)
-    print("Kết quả Prim")
-    for u, v, w in edges:
-        print(f"  {u} — {v} : {w} km")
-    print(f"  Tổng trọng số: {weight:.2f} km\n")
-    return [(u, v, w) for u, v, w in edges]
-
-
-def run_kruskal(graph):
-    edges, weight = kruskal(graph)
-    print("Kết quả Kruskal")
-    for u, v, w in edges:
-        print(f"  {u} — {v} : {w} km")
-    print(f"  Tổng trọng số: {weight:.2f} km\n")
-    return [(u, v, w) for u, v, w in edges]
