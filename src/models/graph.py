@@ -166,3 +166,21 @@ class Graph:
                 self.adj_list[u][new_name] = weight
 
         return True
+    
+    def reverse_edge(self,u,v):
+        """
+        Đảo ngược chiều của một cạnh (u,v) đối với đồ thị có hướng.
+        Cạnh (u,v) -> Cạnh (v,u)
+        """
+
+        if not self.directed:
+            return False
+        
+        if u not in self.adj_list or v not in self.adj_list[u]:
+            return False
+        
+        weight = self.adj_list[u][v]
+        self.remove_edge(u,v)
+        self.add_edge(v,u,weight)
+       
+        return True

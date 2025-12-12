@@ -74,6 +74,13 @@ class GraphController:
                 self.refresh_view()
             except ValueError:
                 self.app.view.log("Lỗi: Trọng số không hợp lệ!")
+    
+    def handle_reverse_edge(self,u,v):
+        if self.graph.reverse_edge(u,v):
+            self.app.view.log(f"Đã đảo chiều cạnh {u}-{v} thành cạnh {v}-{u}")
+            self.refresh_view()
+        else:
+            self.app.view.log(f"Không thể đảo chiều! (Chỉ đảo chiều được với đồ thị có hướng)")
 
     def handle_rename_node(self, old_name):
         new_name = simpledialog.askstring("Đổi tên", f"Tên mới cho đỉnh '{old_name}':", parent=self.app.root)
@@ -112,6 +119,14 @@ class GraphController:
         menu = tk.Menu(self.app.root, tearoff=0)
         menu.add_command(label=f"Cạnh: {u} -> {v}", state="disabled")
         menu.add_separator()
+
+        # Chỉ hiển thị chức năng đảo chiều của cạnh đồ thị (Nếu là đồ thị có hướng)
+        if self.directed:
+            menu.add_command(label = "Đảo chiều mũi tên", command = lambda: self.handle_reverse_edge(u,v))
+
         menu.add_command(label="Sửa Trọng số", command=lambda: self.edit_edge_weight(u, v))
         menu.add_command(label="Xóa Cạnh", command=lambda: self.delete_edge(u, v))
+        
         menu.post(event.x_root, event.y_root)
+
+
