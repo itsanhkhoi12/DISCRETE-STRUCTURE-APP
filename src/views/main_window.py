@@ -24,11 +24,14 @@ class MainWindow:
         self.canvas_view = CanvasView(main_container,controller=self.controller, bg="white")
         main_container.add(self.canvas_view)
     
-    # SỬA ĐỔI: Thêm tham số 'is_weighted'
-    def refresh_graph(self, nodes, edges, is_directed): 
+    def refresh_graph(self, nodes, edges, is_directed,highlighted_edges=None): 
         """Hàm này để Controller gọi khi cần vẽ lại đồ thị"""
-        self.canvas_view.draw_graph(nodes, edges, is_directed) 
+        self.canvas_view.draw_graph(nodes, edges, is_directed,highlighted_edges) 
 
     def log(self, message):
         """Hàm này để Controller gọi khi cần ghi log"""
         self.control_panel.append_log(message)
+    
+    def clear_log(self):
+        """Hàm này để Controller gọi khi cần xóa log"""
+        self.control_panel.clear_log()

@@ -59,8 +59,20 @@ class ControlPanel(tk.Frame):
         row_algo.pack(fill=tk.X)
         tk.Button(row_algo, text="BFS", width=6, command=lambda: self.controller.run_basic_algo("BFS")).pack(side=tk.LEFT, padx=2)
         tk.Button(row_algo, text="DFS", width=6, command=lambda: self.controller.run_basic_algo("DFS")).pack(side=tk.LEFT, padx=2)
-        tk.Button(row_algo, text="2 Phía", command=lambda: self.controller.run_basic_algo("BIPARTITE")).pack(side=tk.LEFT, padx=2)
+        
+        mb_path = tk.Menubutton(row_algo, text="Tìm đường đi", relief=tk.RAISED, bg="#e74c3c", fg="white")
+        menu_path = tk.Menu(mb_path, tearoff=0)
+        
+        # Thêm 2 lựa chọn vào menu
+        menu_path.add_command(label="Dijkstra", command=lambda: self.controller.run_shortest_path("Dijkstra"))
+        menu_path.add_command(label="Bellman-Ford", command=lambda: self.controller.run_shortest_path("Bellman-Ford"))
+        
+        mb_path.config(menu=menu_path)
+        mb_path.pack(side=tk.LEFT, padx=2)
 
+        # Nút kiểm tra 2 phía (giữ nguyên hoặc dời sang phải)
+        tk.Button(row_algo, text="2 Phía", command=lambda: self.controller.run_basic_algo("BIPARTITE")).pack(side=tk.LEFT, padx=2)
+       
         # --- SECTION 3: ADVANCED ---
         frame_adv = tk.LabelFrame(self, text="3. Nâng cao", bg=self.bg_color, font=("Arial", 10, "bold"))
         frame_adv.pack(fill=tk.X, pady=10)
@@ -72,7 +84,7 @@ class ControlPanel(tk.Frame):
         self.combo_algo.current(0)
         self.combo_algo.pack(fill=tk.X, padx=5, pady=5)
 
-        tk.Label(frame_adv, text="Đỉnh đích (nếu cần):", bg=self.bg_color).pack(anchor="w", padx=5)
+        tk.Label(frame_adv, text="Đỉnh đích (Ford-Fulkerson):", bg=self.bg_color).pack(anchor="w", padx=5)
         self.ent_end_node = tk.Entry(frame_adv, width=10)
         self.ent_end_node.pack(anchor="w", padx=5, pady=(0,5))
 
@@ -85,3 +97,7 @@ class ControlPanel(tk.Frame):
     def append_log(self, message):
         self.log_box.insert(tk.END, f"> {message}\n")
         self.log_box.see(tk.END)
+
+    def clear_log(self):
+        """Xóa toàn bộ nội dung trong khung Log"""
+        self.log_box.delete('1.0', tk.END)

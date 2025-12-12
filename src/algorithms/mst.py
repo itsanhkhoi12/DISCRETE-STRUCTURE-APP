@@ -56,9 +56,9 @@ class MST:
         # Kết quả, parent, rank
         mst_weights = 0
         mst_edges = []
-        parent = list(range(graph_sizes))
-        rank = [0] * graph_sizes
-
+        parent = {node: node for node in graph.nodes}
+        rank = {node: 0 for node in graph.nodes}
+        
         for u, v, weight in edges:
             if len(mst_edges) == graph_sizes - 1:
                 break
