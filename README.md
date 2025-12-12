@@ -78,4 +78,5 @@ python ./src/app.py
 * **03/12/2025**: Sửa gọn gàng cấu trúc file của ứng dụng. Hoàn thành các tính năng cơ bản cần thiết.
 * **04/12/2025**: Thêm tính năng chỉnh sửa Node, Edge của đồ thị (Xoá, cập nhật tên đỉnh, trọng số của cạnh,...)
 * **11/12/2025**: Hoàn thiện các thuật toán nâng cao của chương trình.
-* **12/12/2025**: Đã hoàn thành xây dựng ứng dụng với các chức năng thoả mãn yêu cầu cảu bài tập lớn.
+* **12/12/2025**: Đã hoàn thành xây dựng ứng dụng với các chức năng thoả mãn yêu cầu của bài tập lớn.
+* **14/12/2025**: Hoàn thành Tiểu luận + Ứng dụng thực hành Bài tập lớn.
