@@ -159,7 +159,7 @@ class AlgorithmController:
 
         # 2. Hiển thị kết quả ra Log & Thu thập cạnh để tô màu
         self.app.view.log(f"=== KẾT QUẢ {algo_type.upper()} TỪ ĐỈNH {start_node} ===")
-        self.app.view.log(f"{'Đến':<5} | {'Dist':<5} | {'Path'}")
+        self.app.view.log(f"{'Đến':<5} | {'Khoảng cách để đi':<5} | {'Đường đi'}")
         self.app.view.log("-" * 40)
 
         spt_edges = [] # Danh sách các cạnh thuộc cây đường đi ngắn nhất (Shortest Path Tree)
@@ -183,13 +183,13 @@ class AlgorithmController:
 
                 # In ra Log
                 path_str = " -> ".join(path)
-                self.app.view.log(f"{target:<5} | {dist:<5} | {path_str}")
+                self.app.view.log(f"{target:<5} | {dist:<17} | {path_str}")
 
                 # Thêm cạnh (Parent -> Target) vào danh sách highlight
                 if parent:
                     spt_edges.append((parent, target))
             else:
-                self.app.view.log(f"{target:<5} | {'Inf':<5} | Không có đường đi")
+                self.app.view.log(f"{target:<5} | {'Inf':<17} | Không có đường đi")
 
         # 3. Vẽ lại đồ thị và highlight toàn bộ cây đường đi ngắn nhất
         self.app.graph_ctrl.refresh_view(highlight_edges=spt_edges)
