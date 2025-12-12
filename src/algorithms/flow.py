@@ -65,7 +65,7 @@ class Flow():
                 break
 
             # 2. Tìm luồng cực đại có thể đẩy qua đường
-            path_flow = float('inf')
+            path_flow = int('inf')
             s = sink
             while s != source:
                 u = parent[s]
