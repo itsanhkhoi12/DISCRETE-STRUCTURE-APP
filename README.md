@@ -21,7 +21,7 @@ Xây dựng một ứng dụng thoả mãn các chức năng sau:
 ```text
 src/
 │
-├── main.py                   <-- Dùng để chạy app chính
+├── app.py                   <-- Dùng để chạy app chính
 │
 ├── models/                   <-- DỮ LIỆU
 │   ├── __init__.py
@@ -61,6 +61,11 @@ src/
 └── data/                     <-- THƯ MỤC CHỨA FILE INPUT/OUTPUT
 ```
 
+## Cách chạy chương trình
+```bash
+python ./src/app.py
+```
+
 ## Cập nhật
 * 23/11/2025: Tạo trước UI để dễ hình dung hơn ứng dụng BTL mình sẽ làm, từ tuần sau sẽ triển khai dần dần các yêu cầu cần thiết.
 * 30/11/2025: Thêm tính năng chuyển đổi giữa các kiểu đồ thị (Ma trận kề <-> Danh sách kề <-> Danh sách cạnh)
@@ -68,3 +73,4 @@ src/
 * 03/12/2025: Sửa gọn gàng cấu trúc file của ứng dụng. Hoàn thành các tính năng cơ bản cần thiết.
 * 04/12/2025: Thêm tính năng chỉnh sửa Node, Edge của đồ thị (Xoá, cập nhật tên đỉnh, trọng số của cạnh,...)
 * 11/12/2025: Hoàn thiện các thuật toán nâng cao của chương trình.
+* 12/12/2025: Đã hoàn thành xây dựng ứng dụng với các chức năng thoả mãn yêu cầu cảu bài tập lớn.
