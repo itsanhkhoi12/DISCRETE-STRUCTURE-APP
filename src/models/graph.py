@@ -1,8 +1,8 @@
 class Graph:
     def __init__(self, directed=True, weighted=True):
         """
-        Khởi tạo Graph là một Danh sách đỉnh liền kề.
-        Format: Đỉnh: {Danh sách các đỉnh liền kề với đỉnh đó}
+        Khởi tạo Graph là một Danh sách kề.
+        Format: Đỉnh: {Danh sách các kề với đỉnh đó}
         """
         self.nodes = set()      
         self.adj_list = {}      

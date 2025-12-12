@@ -2,9 +2,6 @@ from collections import deque
 from models.graph import Graph
 
 class Bipartite:
-    def __init__(self):
-        pass
-
     @staticmethod
     def check_bipartite(graph: Graph):
         V = graph.nodes

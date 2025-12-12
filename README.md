@@ -15,7 +15,12 @@ Xây dựng một ứng dụng thoả mãn các chức năng sau:
         * (Lưu ý: đồ thị có thể vô hướng & có hướng)
 
 * **Phần nâng cao:**
-    7. Trực quan hóa các thuật toán: (Prim, Kruskal, Hierholzer, Fleury, Ford-Fulkerson)
+    vii. Trực quan hóa các thuật toán:
+    - Prim
+    - Kruskal 
+    - Hierholzer 
+    - Fleury 
+    - Ford-Fulkerson
 ## Cấu trúc các folder và file của bài tập lớn như sau
 
 ```text
@@ -67,10 +72,10 @@ python ./src/app.py
 ```
 
 ## Cập nhật
-* 23/11/2025: Tạo trước UI để dễ hình dung hơn ứng dụng BTL mình sẽ làm, từ tuần sau sẽ triển khai dần dần các yêu cầu cần thiết.
-* 30/11/2025: Thêm tính năng chuyển đổi giữa các kiểu đồ thị (Ma trận kề <-> Danh sách kề <-> Danh sách cạnh)
-* 02/12/2025: Thêm tính năng nhập/lưu đồ thị, kiểm tra đồ thị hai phía và duyệt theo BFS, DFS.
-* 03/12/2025: Sửa gọn gàng cấu trúc file của ứng dụng. Hoàn thành các tính năng cơ bản cần thiết.
-* 04/12/2025: Thêm tính năng chỉnh sửa Node, Edge của đồ thị (Xoá, cập nhật tên đỉnh, trọng số của cạnh,...)
-* 11/12/2025: Hoàn thiện các thuật toán nâng cao của chương trình.
-* 12/12/2025: Đã hoàn thành xây dựng ứng dụng với các chức năng thoả mãn yêu cầu cảu bài tập lớn.
+* **23/11/2025**: Tạo trước UI để dễ hình dung hơn ứng dụng BTL mình sẽ làm, từ tuần sau sẽ triển khai dần dần các yêu cầu cần thiết.
+* **30/11/2025**: Thêm tính năng chuyển đổi giữa các kiểu đồ thị (Ma trận kề <-> Danh sách kề <-> Danh sách cạnh)
+* **02/12/2025**: Thêm tính năng nhập/lưu đồ thị, kiểm tra đồ thị hai phía và duyệt theo BFS, DFS.
+* **03/12/2025**: Sửa gọn gàng cấu trúc file của ứng dụng. Hoàn thành các tính năng cơ bản cần thiết.
+* **04/12/2025**: Thêm tính năng chỉnh sửa Node, Edge của đồ thị (Xoá, cập nhật tên đỉnh, trọng số của cạnh,...)
+* **11/12/2025**: Hoàn thiện các thuật toán nâng cao của chương trình.
+* **12/12/2025**: Đã hoàn thành xây dựng ứng dụng với các chức năng thoả mãn yêu cầu cảu bài tập lớn.

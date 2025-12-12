@@ -1,10 +1,15 @@
 from collections import deque
 from models.graph import Graph
-
+from typing import List, Union
 class Traversal:
     @staticmethod
-    def bfs_traversal(graph: Graph, start_node):
-        """Duyệt theo chiều rộng (Queue)"""
+    def bfs_traversal(graph: Graph, start_node: Union[str,int]) -> List[Union[str,int]]:
+        """Duyệt theo chiều rộng (Queue)
+        Args:
+            graph: Đồ thị được biểu diễn dưới dạng danh sách kề
+            start_node: Nút bắt đầu để duyệt theo chiến lược BFS
+        Returns:
+            traversal_path: Đường đi của nút được duyệt từ đồ thị đầu vào theo chiến lược BFS"""
         if start_node not in graph.nodes:
             return []
         
@@ -27,8 +32,14 @@ class Traversal:
         return traversal_path
 
     @staticmethod
-    def dfs_traversal(graph: Graph, start_node):
-        """Duyệt theo chiều sâu (Stack)"""
+    def dfs_traversal(graph: Graph, start_node: Union[str,int]) -> List[Union[str,int]]:
+        """Duyệt theo chiều sâu (Stack)
+        Args:
+            graph: Đồ thị được biểu diễn dưới dạng danh sách kề
+            start_node: Nút bắt đầu để duyệt theo chiến lược DFS
+        Returns:
+            traversal_path: Đường đi của nút được duyệt từ đồ thị đầu vào theo chiến lược DFS
+        """
         if start_node not in graph.nodes:
             return []
 

@@ -1,11 +1,11 @@
 from typing import Any
 from models.graph import Graph
 from collections import deque
+import math
 
 class Flow():
-    
     @staticmethod
-    def ford_fulkerson(graph: Graph, source: Any, sink: Any) -> int:
+    def ford_fulkerson(graph: Graph, source: Any, sink: Any) -> float:
         """
         Tính luồng cực đại từ nguồn (source) đến đích (sink) 
         sử dụng Ford-Fulkerson (phiên bản Edmonds-Karp với BFS).
@@ -65,7 +65,7 @@ class Flow():
                 break
 
             # 2. Tìm luồng cực đại có thể đẩy qua đường
-            path_flow = int('inf')
+            path_flow = math.inf
             s = sink
             while s != source:
                 u = parent[s]
