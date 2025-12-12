@@ -120,10 +120,7 @@ class GraphController:
         menu.add_command(label=f"Cạnh: {u} -> {v}", state="disabled")
         menu.add_separator()
 
-        # Chỉ hiển thị chức năng đảo chiều của cạnh đồ thị (Nếu là đồ thị có hướng)
-        if self.directed:
-            menu.add_command(label = "Đảo chiều mũi tên", command = lambda: self.handle_reverse_edge(u,v))
-
+        menu.add_command(label = "Đảo chiều mũi tên", command = lambda: self.handle_reverse_edge(u,v))
         menu.add_command(label="Sửa Trọng số", command=lambda: self.edit_edge_weight(u, v))
         menu.add_command(label="Xóa Cạnh", command=lambda: self.delete_edge(u, v))
         
