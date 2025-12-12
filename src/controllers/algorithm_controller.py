@@ -109,21 +109,31 @@ class AlgorithmController:
         self.app.graph_ctrl.refresh_view(highlight_edges=highlight_list)
 
     def _display_euler_result(self, path):
-        """Hiển thị chu trình Euler (tô màu cạnh theo đường đi)"""
         if not path:
             self.app.view.log("Không tìm thấy chu trình/đường đi Euler.")
-            messagebox.showinfo("Thông báo", "Không có đường đi Euler!")
+            messagebox.showinfo("Thông báo", "Không tồn tại đường đi Euler!")
             return
 
+        # Điều kiện để in ra đúng thông báo
+        if len(path) > 1 and path[0] == path[-1]:
+            euler_type = "Chu trình Euler"
+        else:
+            euler_type = "Đường đi Euler"
+
         path_str = " -> ".join(map(str, path))
-        self.app.view.log(f"Đường đi Euler: {path_str}")
-        
+        self.app.view.log(f"{euler_type}: {path_str}")
+
+        # Tạo danh sách cạnh để tô màu
         highlight_list = []
         for i in range(len(path) - 1):
-            u, v = path[i], path[i+1]
+            u, v = path[i], path[i + 1]
             highlight_list.append((u, v))
-            
+
         self.app.graph_ctrl.refresh_view(highlight_edges=highlight_list)
+
+        # Pop-up thông báo
+        messagebox.showinfo("Kết quả", f"{euler_type}:\n{path_str}")
+
 
     def handle_shortest_path(self, algo_type, start_node):
         start_node = start_node.strip().upper()
