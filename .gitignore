@@ -147,6 +147,7 @@ activemq-data/
 # SageMath parsed files
 *.sage.py
 
+
 # Environments
 .env
 .envrc
@@ -214,3 +215,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Dummy data
+.data
