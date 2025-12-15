@@ -7,7 +7,7 @@ Xây dựng một ứng dụng thoả mãn các chức năng sau:
 * **Phần cơ bản:**
     1. Vẽ đồ thị trực quan
     2. Lưu đồ thị
-    3. Tìm đường đi ngắn nhất
+    3. Tìm đường đi ngắn nhất (Dijkstra)
     4. Duyệt đồ thị theo các chiến lược: BFS & DFS
     5. Kiểm tra một đồ thị có phải là đồ thị 2 phía không?
     6. Chuyển đổi qua lại giữa các phương pháp biểu diễn đồ thị:
@@ -15,19 +15,18 @@ Xây dựng một ứng dụng thoả mãn các chức năng sau:
         * (Lưu ý: đồ thị có thể vô hướng & có hướng)
 
 * **Phần nâng cao:**
-    7. Trực quan hóa các thuật toán:
-        * 7.1 Prim
-        * 7.2 Kruskal
-        * 7.3 Ford-Fulkerson
-        * 7.4 Fleury
-        * 7.5 Hierholzer
-
+    vii. Trực quan hóa các thuật toán:
+    - Prim
+    - Kruskal 
+    - Hierholzer 
+    - Fleury 
+    - Ford-Fulkerson
 ## Cấu trúc các folder và file của bài tập lớn như sau
 
 ```text
 src/
 │
-├── main.py                   <-- Dùng để chạy app chính
+├── app.py                   <-- Dùng để chạy app chính
 │
 ├── models/                   <-- DỮ LIỆU
 │   ├── __init__.py
@@ -45,8 +44,8 @@ src/
 ├── controllers/              <-- ĐIỀU PHỐI
 │   ├── __init__.py
 │   ├── app_controller.py     # Controller tổng (Quản lý các controller con)
-│   ├── graph_controller.py   # Xử lý thêm/sửa/xóa đỉnh, cạnh
-│   ├── algorithm_controller.py # Xử lý việc gọi thuật toán (BFS, Dijkstra...)
+│   ├── graph_controller.py   # Xử lý thêm/sửa/xóa đỉnh, cạnh và các tính năng cơ bản
+│   ├── algorithm_controller.py # Xử lý việc gọi thuật toán nâng cao (Kruskal, Fleury,...)
 │   └── file_controller.py    # Xử lý nút Lưu/Mở file
 │
 ├── algorithms/               <-- CHỨA THUẬT TOÁN
@@ -60,14 +59,24 @@ src/
 │
 ├── utils/                    <-- TIỆN ÍCH
 │   ├── __init__.py
-│   ├── file_io.py            # Đọc/Ghi file JSON
+│   ├── file_processor.py     # Đọc/Ghi file JSON
 │   ├── layout_math.py        # Tính toán tọa độ (Sin/Cos)
 │   └── converters.py         # Chuyển đổi Ma trận <-> Danh sách kề
 │
 └── data/                     <-- THƯ MỤC CHỨA FILE INPUT/OUTPUT
-    ├── graph_demo.json
-    └── test_input.json
+```
+
+## Cách chạy chương trình
+```bash
+python ./src/app.py
 ```
 
 ## Cập nhật
-* 23/11/2025: Tạo trước UI để dễ hình dung hơn ứng dụng BTL mình sẽ làm, từ tuần sau sẽ triển khai dần dần các yêu cầu cần thiết. Nếu muốn chạy thử thì chạy file `test.py` nhé.
+* **23/11/2025**: Tạo trước UI để dễ hình dung hơn ứng dụng BTL mình sẽ làm, từ tuần sau sẽ triển khai dần dần các yêu cầu cần thiết.
+* **30/11/2025**: Thêm tính năng chuyển đổi giữa các kiểu đồ thị (Ma trận kề <-> Danh sách kề <-> Danh sách cạnh)
+* **02/12/2025**: Thêm tính năng nhập/lưu đồ thị, kiểm tra đồ thị hai phía và duyệt theo BFS, DFS.
+* **03/12/2025**: Sửa gọn gàng cấu trúc file của ứng dụng. Hoàn thành các tính năng cơ bản cần thiết.
+* **04/12/2025**: Thêm tính năng chỉnh sửa Node, Edge của đồ thị (Xoá, cập nhật tên đỉnh, trọng số của cạnh,...)
+* **11/12/2025**: Hoàn thiện các thuật toán nâng cao của chương trình.
+* **12/12/2025**: Đã hoàn thành xây dựng ứng dụng với các chức năng thoả mãn yêu cầu của bài tập lớn.
+* **14/12/2025**: Hoàn thành Tiểu luận + Ứng dụng thực hành Bài tập lớn.
