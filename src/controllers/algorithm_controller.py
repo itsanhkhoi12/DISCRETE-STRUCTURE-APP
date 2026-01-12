@@ -1,4 +1,3 @@
-# src/controllers/algorithm_controller.py
 from tkinter import messagebox
 from algorithms.traversal import Traversal
 from algorithms.properties import Bipartite
