@@ -1,4 +1,3 @@
-# src/controllers/graph_controller.py
 import tkinter as tk
 from tkinter import simpledialog, messagebox
 from models.graph import Graph
